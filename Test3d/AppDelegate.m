@@ -13,6 +13,13 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Insert code here to initialize your application
+    [[NSApplication sharedApplication]
+     setPresentationOptions:NSApplicationPresentationFullScreen];
+
+    NSImage* imageObj = [[NSImage alloc] initWithContentsOfFile:@"/Users/francip/Desktop/t.jpg"];
+
+    [_image setImage:imageObj];
+    [_image setImageScaling:NSImageScaleProportionallyUpOrDown];
 }
 
 @end
