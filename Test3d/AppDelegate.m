@@ -16,7 +16,8 @@
     [[NSApplication sharedApplication]
      setPresentationOptions:NSApplicationPresentationFullScreen];
 
-    NSImage* imageObj = [[NSImage alloc] initWithContentsOfFile:@"/Users/francip/Desktop/t.jpg"];
+    //NSImage* imageObj = [[NSImage alloc] initWithContentsOfFile:@"/Users/francip/Desktop/t.jpg"];
+    NSImage* imageObj = [NSImage imageNamed:@"t3.png"];
 
     [_image setImage:imageObj];
     [_image setImageScaling:NSImageScaleProportionallyUpOrDown];

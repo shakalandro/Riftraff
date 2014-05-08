@@ -918,8 +918,8 @@
 				INFOPLIST_FILE = "Test3d/Test3d-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/rvm4/test3d/LibOVR/Lib/MacOS/Debug,
-					/Users/rvm4/test3d/LibOVR/Lib/MacOS/Release,
+					"$(SRCROOT)/LibOVR/Lib/MacOS/Debug",
+					"$(SRCROOT)/LibOVR/Lib/MacOS/Release",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -936,8 +936,8 @@
 				INFOPLIST_FILE = "Test3d/Test3d-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/rvm4/test3d/LibOVR/Lib/MacOS/Debug,
-					/Users/rvm4/test3d/LibOVR/Lib/MacOS/Release,
+					"$(SRCROOT)/LibOVR/Lib/MacOS/Debug",
+					"$(SRCROOT)/LibOVR/Lib/MacOS/Release",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -996,7 +996,7 @@
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				LIBRARY_SEARCH_PATHS = (
-					"../LIbOVR/MacOS/$(CONFIGURATION)",
+					"\"$(SRCROOT)/LIbOVR/MacOS/$(CONFIGURATION)\"",
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Debug\"",
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Release\"",
 					"\"$(SRCROOT)/LibOVR/Lib/x64\"",
@@ -1007,7 +1007,7 @@
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/LibOVR_With_Samples.build/Release/ovr.build/Objects-normal/x86_64\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = "~/LibOVR/Lib/MacOS";
+				SYMROOT = "$(SRCROOT)/LibOVR/Lib/MacOS";
 			};
 			name = Debug;
 		};
@@ -1019,7 +1019,7 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				LIBRARY_SEARCH_PATHS = (
-					"../LIbOVR/MacOS/$(CONFIGURATION)",
+					"\"$(SRCROOT)/LIbOVR/MacOS/$(CONFIGURATION)\"",
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Debug\"",
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Release\"",
 					"\"$(SRCROOT)/LibOVR/Lib/x64\"",
@@ -1030,7 +1030,7 @@
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/LibOVR_With_Samples.build/Release/ovr.build/Objects-normal/x86_64\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = "~/LibOVR/Lib/MacOS";
+				SYMROOT = "$(SRCROOT)/LibOVR/Lib/MacOS";
 			};
 			name = Release;
 		};
@@ -1071,6 +1071,7 @@
 				8C917FAF191C3B4000CD2C77 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
