@@ -14,10 +14,13 @@
 {
     AVPlayer *player = [AVPlayer playerWithURL:[[NSBundle mainBundle] URLForResource:@"shrek" withExtension:@"mp4"]];
 
-    [[self playerView] setPlayer:player];
+    OpenGLMovieLayer *layer = [[OpenGLMovieLayer alloc] initWithMovie:player];
+    [layer setFrame:NSRectToCGRect([[[self window] contentView] bounds])];
 
-    [player seekToTime:kCMTimeZero];
-    [player play];
+    [[[self window] contentView] setWantsLayer:YES];
+    [[[[self window] contentView] layer] addSublayer:layer];
+    [[layer movie] seekToTime:kCMTimeZero];
+    [[layer movie] play];
 }
 
 @end

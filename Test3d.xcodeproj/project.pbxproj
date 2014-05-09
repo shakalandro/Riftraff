@@ -16,13 +16,11 @@
 		52643C53191C28380008350D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52643C32191C28380008350D /* Cocoa.framework */; };
 		52643C5B191C28380008350D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52643C59191C28380008350D /* InfoPlist.strings */; };
 		52643C5D191C28380008350D /* Test3dTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52643C5C191C28380008350D /* Test3dTests.m */; };
-		526E13BC191C950D009720A3 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BA191C950D009720A3 /* CoreMedia.framework */; };
-		526E13BD191C950D009720A3 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BB191C950D009720A3 /* CoreVideo.framework */; };
-		526E13BF191C9517009720A3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BE191C9517009720A3 /* QuartzCore.framework */; };
-		526E13C1191C9524009720A3 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13C0191C9524009720A3 /* ImageIO.framework */; };
-		526E13C2191C9542009720A3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C918015191C40CD00CD2C77 /* CoreGraphics.framework */; };
-		526E13C4191C9542009720A3 /* ImageCaptureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13C3191C9542009720A3 /* ImageCaptureCore.framework */; };
 		526E13C9191C9A35009720A3 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13C8191C9A35009720A3 /* GLKit.framework */; };
+		52893CCE191CA625000FB98E /* OpenGLMovieLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 52893CCD191CA625000FB98E /* OpenGLMovieLayer.m */; };
+		529ECB96191CA9DE00462050 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C918019191C413800CD2C77 /* OpenGL.framework */; };
+		529ECB97191CAD5300462050 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BE191C9517009720A3 /* QuartzCore.framework */; };
+		529ECB98191CB03A00462050 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BB191C950D009720A3 /* CoreVideo.framework */; };
 		52C4AFDE191C823B0099C196 /* shrek.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 52C4AFDD191C823B0099C196 /* shrek.mp4 */; };
 		52C4AFE1191C86EC0099C196 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C4AFDF191C86EC0099C196 /* AVFoundation.framework */; };
 		52C4AFE2191C86EC0099C196 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C4AFE0191C86EC0099C196 /* AVKit.framework */; };
@@ -161,6 +159,9 @@
 		526E13C0191C9524009720A3 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		526E13C3191C9542009720A3 /* ImageCaptureCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageCaptureCore.framework; path = System/Library/Frameworks/ImageCaptureCore.framework; sourceTree = SDKROOT; };
 		526E13C8191C9A35009720A3 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		52893CCC191CA625000FB98E /* OpenGLMovieLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLMovieLayer.h; sourceTree = "<group>"; };
+		52893CCD191CA625000FB98E /* OpenGLMovieLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLMovieLayer.m; sourceTree = "<group>"; };
+		52893CD0191CA77D000FB98E /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		529A8806191C75C200F346E3 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
 		52C4AFDD191C823B0099C196 /* shrek.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = shrek.mp4; sourceTree = "<group>"; };
 		52C4AFDF191C86EC0099C196 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -274,13 +275,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				529ECB98191CB03A00462050 /* CoreVideo.framework in Frameworks */,
+				529ECB97191CAD5300462050 /* QuartzCore.framework in Frameworks */,
+				529ECB96191CA9DE00462050 /* OpenGL.framework in Frameworks */,
 				526E13C9191C9A35009720A3 /* GLKit.framework in Frameworks */,
-				526E13C4191C9542009720A3 /* ImageCaptureCore.framework in Frameworks */,
-				526E13C2191C9542009720A3 /* CoreGraphics.framework in Frameworks */,
-				526E13C1191C9524009720A3 /* ImageIO.framework in Frameworks */,
-				526E13BF191C9517009720A3 /* QuartzCore.framework in Frameworks */,
-				526E13BC191C950D009720A3 /* CoreMedia.framework in Frameworks */,
-				526E13BD191C950D009720A3 /* CoreVideo.framework in Frameworks */,
 				52C4AFE1191C86EC0099C196 /* AVFoundation.framework in Frameworks */,
 				52C4AFE2191C86EC0099C196 /* AVKit.framework in Frameworks */,
 				52643C33191C28380008350D /* Cocoa.framework in Frameworks */,
@@ -336,6 +334,7 @@
 		52643C31191C28380008350D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				52893CD0191CA77D000FB98E /* QuickTime.framework */,
 				526E13C8191C9A35009720A3 /* GLKit.framework */,
 				526E13C3191C9542009720A3 /* ImageCaptureCore.framework */,
 				526E13C0191C9524009720A3 /* ImageIO.framework */,
@@ -370,6 +369,8 @@
 		52643C38191C28380008350D /* Test3d */ = {
 			isa = PBXGroup;
 			children = (
+				52893CCC191CA625000FB98E /* OpenGLMovieLayer.h */,
+				52893CCD191CA625000FB98E /* OpenGLMovieLayer.m */,
 				52643C44191C28380008350D /* AppDelegate.h */,
 				52643C45191C28380008350D /* AppDelegate.m */,
 				52643C47191C28380008350D /* MainMenu.xib */,
@@ -765,6 +766,7 @@
 				8C918010191C3F4000CD2C77 /* AppDelegate.h in Sources */,
 				8C918011191C3F4000CD2C77 /* AppDelegate.m in Sources */,
 				8C918012191C3F4000CD2C77 /* main.m in Sources */,
+				52893CCE191CA625000FB98E /* OpenGLMovieLayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
