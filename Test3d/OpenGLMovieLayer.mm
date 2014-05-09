@@ -138,7 +138,6 @@ static const GLchar* fragmentShaderText =
         // Check the status of the compile/link
         GLint linked;
         glGetProgramiv(prog, GL_LINK_STATUS, &linked);
-
         if (linked == GL_FALSE) {
             GLsizei len;
             GLchar log[400];
@@ -147,6 +146,7 @@ static const GLchar* fragmentShaderText =
         }
 
         lensCenterLoc = glGetUniformLocation(prog, "LensCenter");
+
         screenCenterLoc = glGetUniformLocation(prog, "ScreenCenter");
         scaleLoc = glGetUniformLocation(prog, "Scale");
         scaleInLoc = glGetUniformLocation(prog, "ScaleIn");
@@ -228,10 +228,18 @@ static const GLchar* fragmentShaderText =
     // Enable target for the current frame
     glEnable(CVOpenGLTextureGetTarget(currentFrame));
     
-//    glUseProgram(prog);
+    glUseProgram(prog);
 
+    [self reportError:@"after use program"];
+
+    // Static array of distortion coefficients for the barrel transform function
     glUniform4fv(hmdWarpParamLoc, 1, distortion.K);
+
+    // How to transform the input coordinate to the unit range [-1, 1] with the proper aspect ratio
     glUniform2f(scaleInLoc, 2.0f / w, (2.0f / h) / aspect);
+
+    // How to blow the image back up such that we correct for the barrel distortion having
+    // made the image smaller
     glUniform2f(scaleLoc, (w / 2) * scaleFactor, (h / 2) * scaleFactor * aspect);
 
     // Bind to the current frame
@@ -245,6 +253,8 @@ static const GLchar* fragmentShaderText =
     glLoadIdentity();
     glColor4f(1.0, 1.0, 1.0, 1.0);
     glBegin(GL_QUADS);
+
+    [self reportError:@"after glBegin"];
 
     // Draw the left eye quads
     glUniform2f(screenCenterLoc, x + w * 0.5f, y + h * 0.5f);
@@ -262,6 +272,10 @@ static const GLchar* fragmentShaderText =
     glTexCoord2f(lowerLeft[0], lowerLeft[1]);
     glVertex2f  (imageRect.origin.x, imageRect.origin.y);
 
+    [self reportError:@"after left eye quad"];
+    glEnd();
+    glBegin(GL_QUADS);
+
     // Draw the right eye quads
     glUniform2f(screenCenterLoc, x + w + w * 0.5f, y + h + h * 0.5f);
     glUniform2f(lensCenterLoc, x + w + (w - distortion.XCenterOffset * 0.5) * 0.5, y + h * 0.5);
@@ -278,7 +292,11 @@ static const GLchar* fragmentShaderText =
     glTexCoord2f(lowerLeft[0] + halfWidthSource, lowerLeft[1]);
     glVertex2f  (imageRect.origin.x + halfWidthFrame, imageRect.origin.y);
 
+    [self reportError:@"after after right eye quad"];
+
     glEnd();
+
+    [self reportError:@"after glEnd"];
     
     // This CAOpenGLLayer is responsible to flush
     // the OpenGL context so we call super
@@ -287,9 +305,40 @@ static const GLchar* fragmentShaderText =
                forLayerTime:interval 
                 displayTime:timeStamp];
 
+    glUseProgram(0);
+
+    [self reportError:@"after"];
+
 }
 
-- (void)setupVisualContext:(CGLContextObj)glContext 
+- (void)reportError:(NSString*)message
+{
+  GLenum error = glGetError();
+  if (error != GL_NO_ERROR) {
+    switch (error) {
+      case GL_INVALID_ENUM:
+        NSLog ( @"GL error occurred: %u GL_INVALID_ENUM, %@",  error , message);
+        break;
+      case GL_INVALID_VALUE:
+        NSLog ( @"GL error occurred: %u GL_INVALID_VALUE, %@",  error , message );
+        break;
+      case GL_INVALID_OPERATION:
+        NSLog ( @"GL error occurred: %u GL_INVALID_OPERATION, %@",  error , message );
+        break;
+      case GL_INVALID_FRAMEBUFFER_OPERATION:
+        NSLog ( @"GL error occurred: %u GL_INVALID_FRAMEBUFFER_OPERATION, %@",  error , message );
+        break;
+      case GL_OUT_OF_MEMORY:
+        NSLog ( @"GL error occurred: %u GL_OUT_OF_MEMORY, %@",  error , message );
+        break;
+      default:
+        NSLog ( @"GL error occurred: %u UNKNOWN, %@",  error , message );
+        break;
+    }
+  }
+}
+
+- (void)setupVisualContext:(CGLContextObj)glContext
            withPixelFormat:(CGLPixelFormatObj)pixelFormat;
 {
     // Create the output
