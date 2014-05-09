@@ -9,6 +9,9 @@
 #import <Cocoa/Cocoa.h>
 #import <AVKit/AVKit.h>
 #import <AVFoundation/AVFoundation.h>
+
+#import "OVR.h"
+
 #import "OpenGLMovieLayer.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>

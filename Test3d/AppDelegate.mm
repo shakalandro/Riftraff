@@ -12,6 +12,8 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    OVR::System::Init();
+
     AVPlayer *player = [AVPlayer playerWithURL:[[NSBundle mainBundle] URLForResource:@"shrek" withExtension:@"mp4"]];
 
     OpenGLMovieLayer *layer = [[OpenGLMovieLayer alloc] initWithMovie:player];

@@ -5,6 +5,11 @@
 #import <OpenGL/OpenGL.h>
 #import <CoreVideo/CoreVideo.h>
 
+#import "OVR.h"
+
+using namespace OVR;
+using namespace OVR::Util::Render;
+
 @interface OpenGLMovieLayer : CAOpenGLLayer {
     AVPlayer                *movie;
     AVPlayerItemVideoOutput *output;
@@ -15,6 +20,18 @@
     GLfloat                 lowerRight[2];
     GLfloat                 upperRight[2];
     GLfloat                 upperLeft[2];
+    GLuint                  vertexShader;
+    GLuint                  fragmentShader;
+    GLuint                  prog;
+
+    GLint                   lensCenterLoc;
+    GLint                   screenCenterLoc;
+    GLint                   scaleLoc;
+    GLint                   scaleInLoc;
+    GLint                   hmdWarpParamLoc;
+
+    HMDInfo                 hmdInfo;
+    StereoConfig            stereoConfig;
 }
 
 @property (retain) AVPlayer *movie;

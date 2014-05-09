@@ -17,13 +17,14 @@
 		52643C5B191C28380008350D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52643C59191C28380008350D /* InfoPlist.strings */; };
 		52643C5D191C28380008350D /* Test3dTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52643C5C191C28380008350D /* Test3dTests.m */; };
 		526E13C9191C9A35009720A3 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13C8191C9A35009720A3 /* GLKit.framework */; };
-		52893CCE191CA625000FB98E /* OpenGLMovieLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 52893CCD191CA625000FB98E /* OpenGLMovieLayer.m */; };
+		52893CCE191CA625000FB98E /* OpenGLMovieLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 52893CCD191CA625000FB98E /* OpenGLMovieLayer.mm */; };
 		529ECB96191CA9DE00462050 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C918019191C413800CD2C77 /* OpenGL.framework */; };
 		529ECB97191CAD5300462050 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BE191C9517009720A3 /* QuartzCore.framework */; };
 		529ECB98191CB03A00462050 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BB191C950D009720A3 /* CoreVideo.framework */; };
 		52C4AFDE191C823B0099C196 /* shrek.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 52C4AFDD191C823B0099C196 /* shrek.mp4 */; };
 		52C4AFE1191C86EC0099C196 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C4AFDF191C86EC0099C196 /* AVFoundation.framework */; };
 		52C4AFE2191C86EC0099C196 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C4AFE0191C86EC0099C196 /* AVKit.framework */; };
+		52D4CE0E191CEC0A00470354 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BA191C950D009720A3 /* CoreMedia.framework */; };
 		8C917F75191C363300CD2C77 /* libovr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C917F13191C363300CD2C77 /* libovr.a */; };
 		8C917FB0191C3B5F00CD2C77 /* OVR_Device.h in Headers */ = {isa = PBXBuildFile; fileRef = 8C917F40191C363300CD2C77 /* OVR_Device.h */; };
 		8C917FB1191C3B5F00CD2C77 /* OVR_DeviceConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 8C917F41191C363300CD2C77 /* OVR_DeviceConstants.h */; };
@@ -108,7 +109,7 @@
 		8C91800C191C3EE900CD2C77 /* OVR_Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C917F3B191C363300CD2C77 /* OVR_Timer.cpp */; };
 		8C91800D191C3EE900CD2C77 /* OVR_Profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C917F5C191C363300CD2C77 /* OVR_Profile.cpp */; };
 		8C918010191C3F4000CD2C77 /* AppDelegate.h in Sources */ = {isa = PBXBuildFile; fileRef = 52643C44191C28380008350D /* AppDelegate.h */; };
-		8C918011191C3F4000CD2C77 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 52643C45191C28380008350D /* AppDelegate.m */; };
+		8C918011191C3F4000CD2C77 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 52643C45191C28380008350D /* AppDelegate.mm */; };
 		8C918012191C3F4000CD2C77 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 52643C3E191C28380008350D /* main.m */; };
 		8C918014191C40AA00CD2C77 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C918013191C40AA00CD2C77 /* CoreFoundation.framework */; };
 		8C918016191C40CD00CD2C77 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C918015191C40CD00CD2C77 /* CoreGraphics.framework */; };
@@ -145,7 +146,7 @@
 		52643C40191C28380008350D /* Test3d-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Test3d-Prefix.pch"; sourceTree = "<group>"; };
 		52643C42191C28380008350D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		52643C44191C28380008350D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		52643C45191C28380008350D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		52643C45191C28380008350D /* AppDelegate.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		52643C48191C28380008350D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		52643C4A191C28380008350D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		52643C50191C28380008350D /* Test3dTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Test3dTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -160,7 +161,7 @@
 		526E13C3191C9542009720A3 /* ImageCaptureCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageCaptureCore.framework; path = System/Library/Frameworks/ImageCaptureCore.framework; sourceTree = SDKROOT; };
 		526E13C8191C9A35009720A3 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		52893CCC191CA625000FB98E /* OpenGLMovieLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLMovieLayer.h; sourceTree = "<group>"; };
-		52893CCD191CA625000FB98E /* OpenGLMovieLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLMovieLayer.m; sourceTree = "<group>"; };
+		52893CCD191CA625000FB98E /* OpenGLMovieLayer.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = OpenGLMovieLayer.mm; sourceTree = "<group>"; };
 		52893CD0191CA77D000FB98E /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		529A8806191C75C200F346E3 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
 		52C4AFDD191C823B0099C196 /* shrek.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = shrek.mp4; sourceTree = "<group>"; };
@@ -275,6 +276,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52D4CE0E191CEC0A00470354 /* CoreMedia.framework in Frameworks */,
 				529ECB98191CB03A00462050 /* CoreVideo.framework in Frameworks */,
 				529ECB97191CAD5300462050 /* QuartzCore.framework in Frameworks */,
 				529ECB96191CA9DE00462050 /* OpenGL.framework in Frameworks */,
@@ -370,9 +372,9 @@
 			isa = PBXGroup;
 			children = (
 				52893CCC191CA625000FB98E /* OpenGLMovieLayer.h */,
-				52893CCD191CA625000FB98E /* OpenGLMovieLayer.m */,
+				52893CCD191CA625000FB98E /* OpenGLMovieLayer.mm */,
 				52643C44191C28380008350D /* AppDelegate.h */,
-				52643C45191C28380008350D /* AppDelegate.m */,
+				52643C45191C28380008350D /* AppDelegate.mm */,
 				52643C47191C28380008350D /* MainMenu.xib */,
 				52643C4A191C28380008350D /* Images.xcassets */,
 				52643C39191C28380008350D /* Supporting Files */,
@@ -764,9 +766,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C918010191C3F4000CD2C77 /* AppDelegate.h in Sources */,
-				8C918011191C3F4000CD2C77 /* AppDelegate.m in Sources */,
+				8C918011191C3F4000CD2C77 /* AppDelegate.mm in Sources */,
 				8C918012191C3F4000CD2C77 /* main.m in Sources */,
-				52893CCE191CA625000FB98E /* OpenGLMovieLayer.m in Sources */,
+				52893CCE191CA625000FB98E /* OpenGLMovieLayer.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
