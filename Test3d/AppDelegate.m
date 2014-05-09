@@ -12,15 +12,12 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    // Insert code here to initialize your application
-    [[NSApplication sharedApplication]
-     setPresentationOptions:NSApplicationPresentationFullScreen];
+    AVPlayer *player = [AVPlayer playerWithURL:[[NSBundle mainBundle] URLForResource:@"shrek" withExtension:@"mp4"]];
 
-    //NSImage* imageObj = [[NSImage alloc] initWithContentsOfFile:@"/Users/francip/Desktop/t.jpg"];
-    NSImage* imageObj = [NSImage imageNamed:@"t3.png"];
+    [[self playerView] setPlayer:player];
 
-    [_image setImage:imageObj];
-    [_image setImageScaling:NSImageScaleProportionallyUpOrDown];
+    [player seekToTime:kCMTimeZero];
+    [player play];
 }
 
 @end

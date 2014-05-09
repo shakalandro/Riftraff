@@ -16,10 +16,17 @@
 		52643C53191C28380008350D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52643C32191C28380008350D /* Cocoa.framework */; };
 		52643C5B191C28380008350D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52643C59191C28380008350D /* InfoPlist.strings */; };
 		52643C5D191C28380008350D /* Test3dTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52643C5C191C28380008350D /* Test3dTests.m */; };
+		526E13BC191C950D009720A3 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BA191C950D009720A3 /* CoreMedia.framework */; };
+		526E13BD191C950D009720A3 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BB191C950D009720A3 /* CoreVideo.framework */; };
+		526E13BF191C9517009720A3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BE191C9517009720A3 /* QuartzCore.framework */; };
+		526E13C1191C9524009720A3 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13C0191C9524009720A3 /* ImageIO.framework */; };
+		526E13C2191C9542009720A3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C918015191C40CD00CD2C77 /* CoreGraphics.framework */; };
+		526E13C4191C9542009720A3 /* ImageCaptureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13C3191C9542009720A3 /* ImageCaptureCore.framework */; };
+		526E13C9191C9A35009720A3 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13C8191C9A35009720A3 /* GLKit.framework */; };
+		52C4AFDE191C823B0099C196 /* shrek.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 52C4AFDD191C823B0099C196 /* shrek.mp4 */; };
+		52C4AFE1191C86EC0099C196 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C4AFDF191C86EC0099C196 /* AVFoundation.framework */; };
+		52C4AFE2191C86EC0099C196 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C4AFE0191C86EC0099C196 /* AVKit.framework */; };
 		8C917F75191C363300CD2C77 /* libovr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C917F13191C363300CD2C77 /* libovr.a */; };
-		8C917FA3191C388000CD2C77 /* t2.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 8C917FA1191C388000CD2C77 /* t2.tiff */; };
-		8C917FA4191C388000CD2C77 /* t1.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 8C917FA2191C388000CD2C77 /* t1.tiff */; };
-		8C917FA7191C389C00CD2C77 /* t3.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C917FA6191C389C00CD2C77 /* t3.png */; };
 		8C917FB0191C3B5F00CD2C77 /* OVR_Device.h in Headers */ = {isa = PBXBuildFile; fileRef = 8C917F40191C363300CD2C77 /* OVR_Device.h */; };
 		8C917FB1191C3B5F00CD2C77 /* OVR_DeviceConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 8C917F41191C363300CD2C77 /* OVR_DeviceConstants.h */; };
 		8C917FB2191C3B5F00CD2C77 /* OVR_DeviceHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C917F42191C363300CD2C77 /* OVR_DeviceHandle.cpp */; };
@@ -148,6 +155,16 @@
 		52643C58191C28380008350D /* Test3dTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Test3dTests-Info.plist"; sourceTree = "<group>"; };
 		52643C5A191C28380008350D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52643C5C191C28380008350D /* Test3dTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Test3dTests.m; sourceTree = "<group>"; };
+		526E13BA191C950D009720A3 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		526E13BB191C950D009720A3 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		526E13BE191C9517009720A3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		526E13C0191C9524009720A3 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		526E13C3191C9542009720A3 /* ImageCaptureCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageCaptureCore.framework; path = System/Library/Frameworks/ImageCaptureCore.framework; sourceTree = SDKROOT; };
+		526E13C8191C9A35009720A3 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		529A8806191C75C200F346E3 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
+		52C4AFDD191C823B0099C196 /* shrek.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = shrek.mp4; sourceTree = "<group>"; };
+		52C4AFDF191C86EC0099C196 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		52C4AFE0191C86EC0099C196 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		8C917F0E191C363300CD2C77 /* OVR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OVR.h; sourceTree = "<group>"; };
 		8C917F0F191C363300CD2C77 /* OVRVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OVRVersion.h; sourceTree = "<group>"; };
 		8C917F13191C363300CD2C77 /* libovr.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libovr.a; sourceTree = "<group>"; };
@@ -244,9 +261,6 @@
 		8C917F72191C363300CD2C77 /* Util_LatencyTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util_LatencyTest.h; sourceTree = "<group>"; };
 		8C917F73191C363300CD2C77 /* Util_Render_Stereo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Util_Render_Stereo.cpp; sourceTree = "<group>"; };
 		8C917F74191C363300CD2C77 /* Util_Render_Stereo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util_Render_Stereo.h; sourceTree = "<group>"; };
-		8C917FA1191C388000CD2C77 /* t2.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = t2.tiff; sourceTree = "<group>"; };
-		8C917FA2191C388000CD2C77 /* t1.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = t1.tiff; sourceTree = "<group>"; };
-		8C917FA6191C389C00CD2C77 /* t3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = t3.png; sourceTree = "<group>"; };
 		8C917FAC191C3B3F00CD2C77 /* libovr.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libovr.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C918013191C40AA00CD2C77 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		8C918015191C40CD00CD2C77 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -260,6 +274,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				526E13C9191C9A35009720A3 /* GLKit.framework in Frameworks */,
+				526E13C4191C9542009720A3 /* ImageCaptureCore.framework in Frameworks */,
+				526E13C2191C9542009720A3 /* CoreGraphics.framework in Frameworks */,
+				526E13C1191C9524009720A3 /* ImageIO.framework in Frameworks */,
+				526E13BF191C9517009720A3 /* QuartzCore.framework in Frameworks */,
+				526E13BC191C950D009720A3 /* CoreMedia.framework in Frameworks */,
+				526E13BD191C950D009720A3 /* CoreVideo.framework in Frameworks */,
+				52C4AFE1191C86EC0099C196 /* AVFoundation.framework in Frameworks */,
+				52C4AFE2191C86EC0099C196 /* AVKit.framework in Frameworks */,
 				52643C33191C28380008350D /* Cocoa.framework in Frameworks */,
 				8C917F75191C363300CD2C77 /* libovr.a in Frameworks */,
 			);
@@ -313,6 +336,15 @@
 		52643C31191C28380008350D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				526E13C8191C9A35009720A3 /* GLKit.framework */,
+				526E13C3191C9542009720A3 /* ImageCaptureCore.framework */,
+				526E13C0191C9524009720A3 /* ImageIO.framework */,
+				526E13BE191C9517009720A3 /* QuartzCore.framework */,
+				526E13BA191C950D009720A3 /* CoreMedia.framework */,
+				526E13BB191C950D009720A3 /* CoreVideo.framework */,
+				52C4AFDF191C86EC0099C196 /* AVFoundation.framework */,
+				52C4AFE0191C86EC0099C196 /* AVKit.framework */,
+				529A8806191C75C200F346E3 /* QTKit.framework */,
 				8C91801B191C414000CD2C77 /* IOKit.framework */,
 				8C918019191C413800CD2C77 /* OpenGL.framework */,
 				8C918017191C40E600CD2C77 /* CoreMediaIO.framework */,
@@ -547,9 +579,7 @@
 		8C917FA5191C388800CD2C77 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				8C917FA6191C389C00CD2C77 /* t3.png */,
-				8C917FA1191C388000CD2C77 /* t2.tiff */,
-				8C917FA2191C388000CD2C77 /* t1.tiff */,
+				52C4AFDD191C823B0099C196 /* shrek.mp4 */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -710,10 +740,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				52643C3D191C28380008350D /* InfoPlist.strings in Resources */,
-				8C917FA3191C388000CD2C77 /* t2.tiff in Resources */,
-				8C917FA7191C389C00CD2C77 /* t3.png in Resources */,
 				52643C4B191C28380008350D /* Images.xcassets in Resources */,
-				8C917FA4191C388000CD2C77 /* t1.tiff in Resources */,
+				52C4AFDE191C823B0099C196 /* shrek.mp4 in Resources */,
 				52643C43191C28380008350D /* Credits.rtf in Resources */,
 				52643C49191C28380008350D /* MainMenu.xib in Resources */,
 			);
