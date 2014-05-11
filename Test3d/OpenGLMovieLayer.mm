@@ -16,34 +16,123 @@ static const GLchar* vertexShaderText =
 "}\n";
 
 static const GLchar* fragmentShaderText =
-"uniform sampler2D texture;\n"
-"uniform vec2 LensCenter;\n"
-"uniform vec2 ScreenCenter;\n"
-"uniform vec2 Scale;\n"
-"uniform vec2 ScaleIn;\n"
-"uniform vec4 HmdWarpParam;\n"
-"\n"
-"vec2 HmdWarp(vec2 texIn)\n"
-"{\n"
-"    vec2 theta = (texIn - LensCenter) * ScaleIn;\n"
-"    float rSq = theta.x * theta.x + theta.y * theta.y;\n"
-"    vec2 theta1 = theta * (HmdWarpParam.x + HmdWarpParam.y * rSq + \n"
-"            HmdWarpParam.z * rSq * rSq + HmdWarpParam.w * rSq * rSq * rSq);\n"
-"    return LensCenter + Scale * theta1;\n"
-"}\n"
-"\n"
-"void main()\n"
-"{\n"
-"    vec2 tc = HmdWarp(gl_TexCoord[0].xy);\n"
-"    if (any(notEqual(clamp(tc, ScreenCenter-vec2(0.25,0.5), ScreenCenter+vec2(0.25, 0.5)) - tc, vec2(0.0, 0.0))))\n"
-"    {\n"
-"        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
-"    }\n"
-"    else\n"
-"    {\n"
-"        gl_FragColor = texture2D(texture, tc);\n"
-"    }\n"
-"}\n";
+" uniform Texture2D Texture : register(t0); \n"
+" uniform SamplerState Linear : register(s0); \n"
+" uniform float2 LensCenter; \n"
+" uniform float2 ScreenCenter; \n"
+" uniform float2 Scale; \n"
+" uniform float2 ScaleIn; \n"
+" uniform float4 HmdWarpParam; \n"
+" \n"
+" float4 main(in float4 oPosition : SV_Position, \n"
+"             in float4 oColor : COLOR, \n"
+"             in float2 oTexCoord : TEXCOORD0 \n"
+"            ) : SV_Target \n"
+" { \n"
+"     return float4(0.0, 0.0, 1.0, 1.0); \n"
+"     //return Texture.Sample(Linear, oTexCoord); \n"
+" } \n";
+
+static const GLchar* fragmentShaderTextOrig =
+" uniform Texture2D Texture : register(t0); \n"
+" uniform SamplerState Linear : register(s0); \n"
+" uniform float2 LensCenter; \n"
+" uniform float2 ScreenCenter; \n"
+" uniform float2 Scale; \n"
+" uniform float2 ScaleIn; \n"
+" uniform float4 HmdWarpParam; \n"
+" \n"
+" // Scales input texture coordinates for distortion. \n"
+" float2 HmdWarp(float2 in01) \n"
+" { \n"
+"     // Scales to [-1, 1] \n"
+"     float2 theta = (in01 - LensCenter) * ScaleIn; \n"
+"     float rSq = theta.x * theta.x + theta.y * theta.y; \n"
+"     float2 rvector= theta * ( \n"
+"                              HmdWarpParam.x + \n"
+"                              HmdWarpParam.y * rSq + \n"
+"                              HmdWarpParam.z * rSq * rSq + \n"
+"                              HmdWarpParam.w * rSq * rSq * rSq \n"
+"                             ); \n"
+"     return LensCenter + Scale * rvector; \n"
+" } \n"
+" \n"
+" float4 main(in float4 oPosition : SV_Position, \n"
+"             in float4 oColor : COLOR, \n"
+"             in float2 oTexCoord : TEXCOORD0 \n"
+"            ) : SV_Target \n"
+" { \n"
+"     float2 tc = HmdWarp(oTexCoord); \n"
+"     if (any(clamp(tc, \n"
+"                   ScreenCenter-float2(0.25,0.5), \n"
+"                   ScreenCenter+float2(0.25, 0.5) \n"
+"                  ) - tc \n"
+"            ) \n"
+"        ) \n"
+"     {\n"
+"         // Render black pixel \n"
+"         return float4(0.0, 0.0, 1.0, 1.0); \n"
+"     }\n"
+" \n"
+" \n"
+" \n"
+" \n"
+"         // Grab the texture pixel from the distorted coords \n"
+"     return Texture.Sample(Linear, tc); \n"
+" \n"
+" } \n";
+
+static const GLchar* fragmentShaderTextAlt =
+" uniform sampler2D texture; \n"
+" \n"
+" uniform vec2 LensCenter; \n"
+" uniform vec2 ScreenCenter; \n"
+" uniform vec2 Scale; \n"
+" uniform vec2 ScaleIn; \n"
+" uniform vec4 HmdWarpParam; \n"
+" \n"
+" // Scales input texture coordinates for distortion. \n"
+" vec2 HmdWarp(vec2 texIn) \n"
+" { \n"
+"     // Scales to [-1, 1] \n"
+"     vec2 theta = (texIn - LensCenter) * ScaleIn; \n"
+"     float rSq = theta.x * theta.x + theta.y * theta.y; \n"
+"     vec2 theta1 = theta * ( \n"
+"                            HmdWarpParam.x +  \n"
+"                            HmdWarpParam.y * rSq +  \n"
+"                            HmdWarpParam.z * rSq * rSq +  \n"
+"                            HmdWarpParam.w * rSq * rSq * rSq \n"
+"                           ); \n"
+"     return LensCenter + Scale * theta1; \n"
+" } \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" void main() \n"
+" { \n"
+"     vec2 tc = HmdWarp(gl_TexCoord[0].xy); \n"
+"     if (any(notEqual(clamp(tc, \n"
+"                            ScreenCenter-vec2(0.25,0.5), \n"
+"                            ScreenCenter+vec2(0.25, 0.5) \n"
+"                           ) - tc, \n"
+"                      vec2(0.0, 0.0) \n"
+"                     ) \n"
+"            ) \n"
+"        ) \n"
+"     { \n"
+"         // Render green pixel \n"
+"         gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0); \n"
+"     } \n"
+"     else \n"
+"     { \n"
+"         // Grab the texture pixel from the distorted coords \n"
+"         gl_FragColor = texture2D(texture, tc); \n"
+"     } \n"
+" } \n";
+
+const int EYE_LEFT = 1;
+const int EYE_RIGHT = -1;
 
 - (id)initWithMovie:(AVPlayer*)m;
 {
@@ -87,25 +176,6 @@ static const GLchar* fragmentShaderText =
     hmdInfo.DesktopY = 0;
 
     stereoConfig.SetHMDInfo(hmdInfo);
-}
-
-- (GLuint)compileShader:(GLenum)type withSource:(const GLchar *const *)shaderSrc
-{
-    GLuint shader = glCreateShader(type);
-    glShaderSource(shader, 1, shaderSrc, NULL);
-    glCompileShader(shader);
-
-    GLint compiled;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-
-    if (compiled == GL_FALSE) {
-        GLsizei len;
-        GLchar log[400];
-        glGetShaderInfoLog(shader, 400, & len, log);
-        glDeleteShader(shader);
-    }
-
-    return shader;
 }
 
 - (BOOL)canDrawInCGLContext:(CGLContextObj)glContext
@@ -173,142 +243,212 @@ static const GLchar* fragmentShaderText =
 
             // Returns the texture coordinates for the
             // part of the image that should be displayed
+            GLfloat lowerLeft[2];
+            GLfloat lowerRight[2];
+            GLfloat upperRight[2];
+            GLfloat upperLeft[2];
             CVOpenGLTextureGetCleanTexCoords(currentFrame,
                                              lowerLeft,
                                              lowerRight,
                                              upperRight,
                                              upperLeft);
             
+            frameBounds = CGRectMake(upperLeft[0],
+                                     upperLeft[1],
+                                     lowerRight[0] - upperLeft[0],
+                                     lowerRight[1] - upperLeft[1]);
+            leftEyeFrameBounds = CGRectMake(frameBounds.origin.x,
+                                            frameBounds.origin.y,
+                                            frameBounds.size.width/2,
+                                            frameBounds.size.height);
+            rightEyeFrameBounds = CGRectOffset(leftEyeFrameBounds,
+                                               leftEyeFrameBounds.size.width,
+                                               0);
+
             return YES;
         }
     }
     
     return NO;
-} 
+}
 
+- (void)setupVisualContext:(CGLContextObj)glContext
+           withPixelFormat:(CGLPixelFormatObj)pixelFormat;
+{
+    // Create the output
+    output = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:@{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32ARGB)}];
+
+    [output setSuppressesPlayerRendering:TRUE];
+
+    [[[self movie] currentItem] addOutput:output];
+}
+
+- (GLuint)compileShader:(GLenum)type withSource:(const GLchar *const *)shaderSrc
+{
+    GLuint shader = glCreateShader(type);
+    glShaderSource(shader, 1, shaderSrc, NULL);
+    glCompileShader(shader);
+
+    GLint compiled;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+
+    if (compiled == GL_FALSE) {
+        GLsizei len;
+        GLchar log[400];
+        glGetShaderInfoLog(shader, 400, & len, log);
+        glDeleteShader(shader);
+    }
+
+    return shader;
+}
 
 - (void)drawInCGLContext:(CGLContextObj)glContext 
              pixelFormat:(CGLPixelFormatObj)pixelFormat 
             forLayerTime:(CFTimeInterval)interval 
              displayTime:(const CVTimeStamp *)timeStamp
 {
-    NSRect bounds = NSRectFromCGRect([self bounds]);
-    
-    GLfloat minX, minY, maxX, maxY;        
-    
-    minX = NSMinX(bounds);
-    minY = NSMinY(bounds);
-    maxX = NSMaxX(bounds);
-    maxY = NSMaxY(bounds);
-    
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho( minX, maxX, minY, maxY, -1.0, 1.0);
-    
-    glClearColor(0.0, 0.0, 0.0, 0.0);	     
+    // Self coordinates of the view
+    CGRect viewBounds = [self bounds];
+    CGRect leftEyeViewBounds = CGRectMake(viewBounds.origin.x,
+                                          viewBounds.origin.y,
+                                          viewBounds.size.width/2,
+                                          viewBounds.size.height);
+    CGRect rightEyeViewBounds = CGRectOffset(leftEyeViewBounds,
+                                            leftEyeViewBounds.size.width,
+                                            0);
+
+    // Clear the buffer
+    glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    
-    CGRect imageRect = [self frame];
-
-    GLfloat w = float(upperRight[0] - upperLeft[0]) / float(imageRect.size.width);
-    GLfloat h = float(lowerRight[1] - upperRight[1]) / float(imageRect.size.height);
-    GLfloat x = float(upperLeft[0]) / float(imageRect.size.width);
-    GLfloat y = float(upperLeft[1]) / float(imageRect.size.height);
-
-    GLfloat halfWidthFrame = imageRect.size.width / 2;
-    GLfloat halfWidthSource = lowerRight[0] / 2;
-    
-    const DistortionConfig & distortion = stereoConfig.GetDistortionConfig();
-
-    float aspect = stereoConfig.GetAspect();
-    float scaleFactor = 1.0f / stereoConfig.GetDistortionScale();
 
     // Enable target for the current frame
     glEnable(CVOpenGLTextureGetTarget(currentFrame));
     
-    glUseProgram(prog);
+    // Bind to the current frame texture
+    // This tells OpenGL which texture we are wanting
+    // to draw so that when we make our glTexCord and
+    // glVertex calls, our current frame gets drawn
+    // to the context.
+    glBindTexture(CVOpenGLTextureGetTarget(currentFrame),
+                  CVOpenGLTextureGetName(currentFrame));
+    glMatrixMode(GL_TEXTURE);
+    glLoadIdentity();
 
+    // Set the model view matrix
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    // Set the projection view matrix
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(viewBounds.origin.x,
+            viewBounds.origin.x + viewBounds.size.width,
+            viewBounds.origin.y,
+            viewBounds.origin.y + viewBounds.size.height,
+            -1.0, 1.0);
+
+    // Render left eye
+    [self renderEyeInViewBounds:leftEyeViewBounds
+          withTextureBounds:leftEyeFrameBounds
+          forEye:EYE_LEFT];
+
+    // Render right eye
+    [self renderEyeInViewBounds:rightEyeViewBounds
+          withTextureBounds:rightEyeFrameBounds
+          forEye:EYE_RIGHT];
+
+    glUseProgram(0);
+    [self reportError:@"after glUseProgram"];
+
+    // This CAOpenGLLayer is responsible to flush
+    // the OpenGL context so we call super
+    [super drawInCGLContext:glContext 
+           pixelFormat:pixelFormat
+           forLayerTime:interval
+           displayTime:timeStamp];
+}
+
+- (void)renderEyeInViewBounds:(struct CGRect)viewBounds
+        withTextureBounds:(struct CGRect)textureBounds
+        forEye:(int)eye
+{
+    // Get the HMD distortion configuration
+    const DistortionConfig & distortion = stereoConfig.GetDistortionConfig();
+
+    // Configure the shader
+    // glUseProgram(prog);
     [self reportError:@"after use program"];
+
+    // The shader is applied in [0,1] coordinates
+    float w = float(viewBounds.size.width) / float(textureBounds.size.width*2);
+    float h = float(viewBounds.size.height) / float(textureBounds.size.height);
+    float x = float(textureBounds.origin.x) / float(textureBounds.size.width*2);
+    float y = float(textureBounds.origin.y) / float(textureBounds.size.height);
+
+    float aspect = stereoConfig.GetAspect();
+    float scaleFactor = 1.0f / stereoConfig.GetDistortionScale();
+    float eyeOffset = eye * distortion.XCenterOffset;
+
+    // Eye center
+    glUniform2f(lensCenterLoc,
+                x + (w + eyeOffset * 0.5f) * 0.5f,
+                y + h * 0.5f);
+
+    // Screen center
+    glUniform2f(screenCenterLoc,
+                x + w * 0.5f,
+                y + h * 0.5f);
+
+    // Scale out the distorted sample
+    glUniform2f(scaleLoc,
+                (w / 2.0f) * scaleFactor,
+                (h / 2) * scaleFactor * aspect);
+
+    // Scale in the texture coordinates to [-1,1] in order
+    // to do the distortion properly
+    glUniform2f(scaleInLoc,
+                2.0f / w,
+                (2.0f / h) / aspect);
 
     // Static array of distortion coefficients for the barrel transform function
     glUniform4fv(hmdWarpParamLoc, 1, distortion.K);
 
-    // How to transform the input coordinate to the unit range [-1, 1] with the proper aspect ratio
-    glUniform2f(scaleInLoc, 2.0f / w, (2.0f / h) / aspect);
-
-    // How to blow the image back up such that we correct for the barrel distortion having
-    // made the image smaller
-    glUniform2f(scaleLoc, (w / 2) * scaleFactor, (h / 2) * scaleFactor * aspect);
-
-    // Bind to the current frame
-    // This tells OpenGL which texture we are wanting 
-    // to draw so that when we make our glTexCord and 
-    // glVertex calls, our current frame gets drawn
-    // to the context.
-    glBindTexture(CVOpenGLTextureGetTarget(currentFrame), 
-                  CVOpenGLTextureGetName(currentFrame));
-    glMatrixMode(GL_TEXTURE);
-    glLoadIdentity();
-    glColor4f(1.0, 1.0, 1.0, 1.0);
+    // Render the eye quads
     glBegin(GL_QUADS);
-
     [self reportError:@"after glBegin"];
 
-    // Draw the left eye quads
-    glUniform2f(screenCenterLoc, x + w * 0.5f, y + h * 0.5f);
-    glUniform2f(lensCenterLoc, x + (w + distortion.XCenterOffset * 0.5) * 0.5, y + h * 0.5);
+    // Upper left texture
+    glTexCoord2f(textureBounds.origin.x,
+                 textureBounds.origin.y);
+    // Lower left viewport
+    glVertex2f  (viewBounds.origin.x,
+                 viewBounds.origin.y + viewBounds.size.height);
 
-    glTexCoord2f(upperLeft[0], upperLeft[1]);
-    glVertex2f  (imageRect.origin.x, 
-                 imageRect.origin.y + imageRect.size.height);
-    glTexCoord2f(upperRight[0] - halfWidthSource, upperRight[1]);
-    glVertex2f  (imageRect.origin.x + imageRect.size.width - halfWidthFrame,
-                 imageRect.origin.y + imageRect.size.height);
-    glTexCoord2f(lowerRight[0] - halfWidthSource, lowerRight[1]);
-    glVertex2f  (imageRect.origin.x + imageRect.size.width - halfWidthFrame,
-                 imageRect.origin.y);
-    glTexCoord2f(lowerLeft[0], lowerLeft[1]);
-    glVertex2f  (imageRect.origin.x, imageRect.origin.y);
+    // Upper right texture
+    glTexCoord2f(textureBounds.origin.x + textureBounds.size.width,
+                 textureBounds.origin.y);
+    // Lower right viewport
+    glVertex2f  (viewBounds.origin.x + viewBounds.size.width,
+                 viewBounds.origin.y + viewBounds.size.height);
 
-    [self reportError:@"after left eye quad"];
-    glEnd();
-    glBegin(GL_QUADS);
+    // Lower right texture
+    glTexCoord2f(textureBounds.origin.x + textureBounds.size.width,
+                 textureBounds.origin.y + textureBounds.size.height);
+    // Upper right viewport
+    glVertex2f  (viewBounds.origin.x + viewBounds.size.width,
+                 viewBounds.origin.y);
 
-    // Draw the right eye quads
-    glUniform2f(screenCenterLoc, x + w + w * 0.5f, y + h + h * 0.5f);
-    glUniform2f(lensCenterLoc, x + w + (w - distortion.XCenterOffset * 0.5) * 0.5, y + h * 0.5);
+    // Lower left texture
+    glTexCoord2f(textureBounds.origin.x,
+                 textureBounds.origin.y + textureBounds.size.height);
+    // Upper left viewport
+    glVertex2f  (viewBounds.origin.x,
+                 viewBounds.origin.y);
 
-    glTexCoord2f(upperLeft[0] + halfWidthSource, upperLeft[1]);
-    glVertex2f  (imageRect.origin.x + halfWidthFrame,
-                 imageRect.origin.y + imageRect.size.height);
-    glTexCoord2f(upperRight[0], upperRight[1]);
-    glVertex2f  (imageRect.origin.x + imageRect.size.width,
-                 imageRect.origin.y + imageRect.size.height);
-    glTexCoord2f(lowerRight[0], lowerRight[1]);
-    glVertex2f  (imageRect.origin.x + imageRect.size.width,
-                 imageRect.origin.y);
-    glTexCoord2f(lowerLeft[0] + halfWidthSource, lowerLeft[1]);
-    glVertex2f  (imageRect.origin.x + halfWidthFrame, imageRect.origin.y);
-
-    [self reportError:@"after after right eye quad"];
+    [self reportError:@"after eye quad rendered"];
 
     glEnd();
-
     [self reportError:@"after glEnd"];
-    
-    // This CAOpenGLLayer is responsible to flush
-    // the OpenGL context so we call super
-    [super drawInCGLContext:glContext 
-                pixelFormat:pixelFormat 
-               forLayerTime:interval 
-                displayTime:timeStamp];
-
-    glUseProgram(0);
-
-    [self reportError:@"after"];
-
 }
 
 - (void)reportError:(NSString*)message
@@ -336,17 +476,6 @@ static const GLchar* fragmentShaderText =
         break;
     }
   }
-}
-
-- (void)setupVisualContext:(CGLContextObj)glContext
-           withPixelFormat:(CGLPixelFormatObj)pixelFormat;
-{
-    // Create the output
-    output = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:@{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32ARGB)}];
-
-    [output setSuppressesPlayerRendering:TRUE];
-
-    [[[self movie] currentItem] addOutput:output];
 }
 
 - (CGLContextObj)copyCGLContextForPixelFormat:(CGLPixelFormatObj)pixelFormat;

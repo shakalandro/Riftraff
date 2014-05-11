@@ -15,11 +15,12 @@ using namespace OVR::Util::Render;
     AVPlayerItemVideoOutput *output;
     CVOpenGLTextureRef		currentFrame;
     CVOpenGLTextureCacheRef textureCache;
-    
-    GLfloat                 lowerLeft[2];
-    GLfloat                 lowerRight[2];
-    GLfloat                 upperRight[2];
-    GLfloat                 upperLeft[2];
+
+    // Self coordinates of the frame
+    CGRect                  frameBounds;
+    CGRect                  leftEyeFrameBounds;
+    CGRect                  rightEyeFrameBounds;
+
     GLuint                  vertexShader;
     GLuint                  fragmentShader;
     GLuint                  prog;
