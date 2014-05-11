@@ -25,6 +25,7 @@ using namespace OVR::Util::Render;
     GLuint                  fragmentShader;
     GLuint                  prog;
 
+    GLint                   textureLoc;
     GLint                   lensCenterLoc;
     GLint                   screenCenterLoc;
     GLint                   scaleLoc;

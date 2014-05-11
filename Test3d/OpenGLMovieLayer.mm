@@ -8,34 +8,39 @@
 @synthesize output;
 
 static const GLchar* vertexShaderText =
-"void main(void)\n"
-"{\n"
-"    gl_FrontColor = gl_Color;\n"
-"    gl_Position = gl_Vertex;\n"
-"    gl_TexCoord[0].st = gl_MultiTexCoord0.xy;\n"
-"}\n";
+" varying float xpos; \n"
+" varying float ypos; \n"
+" \n"
+" void main(void) \n"
+" { \n"
+"     gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; \n"
+"     // gl_TexCoord[0] = gl_MultiTexCoord0; \n"
+" \n"
+"     xpos = clamp(gl_Vertex.x,0.0,1.0); \n"
+"     ypos = clamp(gl_Vertex.y,0.0,1.0); \n"
+" \n"
+"     xpos = clamp(gl_MultiTexCoord0.x,0.0,1.0); \n"
+"     ypos = clamp(gl_MultiTexCoord0.y,0.0,1.0); \n"
+" }\n";
 
 static const GLchar* fragmentShaderText =
-" uniform Texture2D Texture : register(t0); \n"
-" uniform SamplerState Linear : register(s0); \n"
-" uniform float2 LensCenter; \n"
-" uniform float2 ScreenCenter; \n"
-" uniform float2 Scale; \n"
-" uniform float2 ScaleIn; \n"
-" uniform float4 HmdWarpParam; \n"
+" uniform sampler2D texture; \n"
 " \n"
-" float4 main(in float4 oPosition : SV_Position, \n"
-"             in float4 oColor : COLOR, \n"
-"             in float2 oTexCoord : TEXCOORD0 \n"
-"            ) : SV_Target \n"
+" varying float xpos; \n"
+" varying float ypos; \n"
+" \n"
+" void main() \n"
 " { \n"
-"     return float4(0.0, 0.0, 1.0, 1.0); \n"
-"     //return Texture.Sample(Linear, oTexCoord); \n"
+"     gl_FragColor = vec4(xpos, ypos, 0.0, 1.0); \n"
+"     // gl_FragColor = texture2D(texture, vec2(xpos, ypos)); \n"
+"     // gl_FragColor = texture2DProj(texture, vec2(xpos, ypos)); \n"
+"     // gl_FragColor = texture2DProj(texture, vec2(gl_TexCoord[0])); \n"
 " } \n";
 
 static const GLchar* fragmentShaderTextOrig =
 " uniform Texture2D Texture : register(t0); \n"
 " uniform SamplerState Linear : register(s0); \n"
+" \n"
 " uniform float2 LensCenter; \n"
 " uniform float2 ScreenCenter; \n"
 " uniform float2 Scale; \n"
@@ -195,15 +200,22 @@ const int EYE_RIGHT = -1;
     if (!prog) {
         // Create ID for shaders
         vertexShader = [self compileShader:GL_VERTEX_SHADER withSource:(const GLchar *const *)&vertexShaderText];
+        [self reportError:@"after compile vertex shader"];
         fragmentShader = [self compileShader:GL_FRAGMENT_SHADER withSource:(const GLchar *const *)&fragmentShaderText];
+        [self reportError:@"after compile fragment shader"];
 
         prog = glCreateProgram();
+        [self reportError:@"after glCreateProgram"];
+
         // Associate shaders with program
         glAttachShader(prog, vertexShader);
+        [self reportError:@"after glAttachShader vertex shader"];
         glAttachShader(prog, fragmentShader);
+        [self reportError:@"after glAttachShader fragment shader"];
 
         // Link program
         glLinkProgram(prog);
+        [self reportError:@"after glLinkProgram"];
 
         // Check the status of the compile/link
         GLint linked;
@@ -215,8 +227,8 @@ const int EYE_RIGHT = -1;
             glDeleteProgram(prog);
         }
 
+        textureLoc = glGetUniformLocation(prog, "texture");
         lensCenterLoc = glGetUniformLocation(prog, "LensCenter");
-
         screenCenterLoc = glGetUniformLocation(prog, "ScreenCenter");
         scaleLoc = glGetUniformLocation(prog, "Scale");
         scaleInLoc = glGetUniformLocation(prog, "ScaleIn");
@@ -321,16 +333,23 @@ const int EYE_RIGHT = -1;
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    GLenum textureTarget = CVOpenGLTextureGetTarget(currentFrame);
+    GLenum textureName = CVOpenGLTextureGetName(currentFrame);
+
     // Enable target for the current frame
-    glEnable(CVOpenGLTextureGetTarget(currentFrame));
-    
+    glEnable(textureTarget);
+
+    // Set the current texture as the active one
+    glActiveTexture(textureTarget);
+
     // Bind to the current frame texture
     // This tells OpenGL which texture we are wanting
     // to draw so that when we make our glTexCord and
     // glVertex calls, our current frame gets drawn
     // to the context.
-    glBindTexture(CVOpenGLTextureGetTarget(currentFrame),
-                  CVOpenGLTextureGetName(currentFrame));
+    glBindTexture(textureTarget, textureName);
+
+    // Set the texture matrix
     glMatrixMode(GL_TEXTURE);
     glLoadIdentity();
 
@@ -345,7 +364,22 @@ const int EYE_RIGHT = -1;
             viewBounds.origin.x + viewBounds.size.width,
             viewBounds.origin.y,
             viewBounds.origin.y + viewBounds.size.height,
-            -1.0, 1.0);
+            0, 1.0);
+
+    // TODO: Fix the texture loading
+    // Currently this renders with a fragment shader
+    // that uses the texture coordinates as red and green
+    // components of the fragment color.
+    // This proves that the shader receives the correct
+    // texture coordinates and the problem is with the
+    // texture sampler we are trying to use
+
+    // Configure the shader
+    glUseProgram(prog);
+    [self reportError:@"after use program"];
+
+    // Load the texture index in the sampler
+	glUniform1i(textureLoc, textureTarget-GL_TEXTURE0);
 
     // Render left eye
     [self renderEyeInViewBounds:leftEyeViewBounds
@@ -374,10 +408,6 @@ const int EYE_RIGHT = -1;
 {
     // Get the HMD distortion configuration
     const DistortionConfig & distortion = stereoConfig.GetDistortionConfig();
-
-    // Configure the shader
-    // glUseProgram(prog);
-    [self reportError:@"after use program"];
 
     // The shader is applied in [0,1] coordinates
     float w = float(viewBounds.size.width) / float(textureBounds.size.width*2);
@@ -453,29 +483,29 @@ const int EYE_RIGHT = -1;
 
 - (void)reportError:(NSString*)message
 {
-  GLenum error = glGetError();
-  if (error != GL_NO_ERROR) {
-    switch (error) {
-      case GL_INVALID_ENUM:
-        NSLog ( @"GL error occurred: %u GL_INVALID_ENUM, %@",  error , message);
-        break;
-      case GL_INVALID_VALUE:
-        NSLog ( @"GL error occurred: %u GL_INVALID_VALUE, %@",  error , message );
-        break;
-      case GL_INVALID_OPERATION:
-        NSLog ( @"GL error occurred: %u GL_INVALID_OPERATION, %@",  error , message );
-        break;
-      case GL_INVALID_FRAMEBUFFER_OPERATION:
-        NSLog ( @"GL error occurred: %u GL_INVALID_FRAMEBUFFER_OPERATION, %@",  error , message );
-        break;
-      case GL_OUT_OF_MEMORY:
-        NSLog ( @"GL error occurred: %u GL_OUT_OF_MEMORY, %@",  error , message );
-        break;
-      default:
-        NSLog ( @"GL error occurred: %u UNKNOWN, %@",  error , message );
-        break;
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        switch (error) {
+            case GL_INVALID_ENUM:
+                NSLog ( @"GL error occurred: %u GL_INVALID_ENUM, %@",  error , message);
+                break;
+            case GL_INVALID_VALUE:
+                NSLog ( @"GL error occurred: %u GL_INVALID_VALUE, %@",  error , message );
+                break;
+            case GL_INVALID_OPERATION:
+                NSLog ( @"GL error occurred: %u GL_INVALID_OPERATION, %@",  error , message );
+                break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION:
+                NSLog ( @"GL error occurred: %u GL_INVALID_FRAMEBUFFER_OPERATION, %@",  error , message );
+                break;
+            case GL_OUT_OF_MEMORY:
+                NSLog ( @"GL error occurred: %u GL_OUT_OF_MEMORY, %@",  error , message );
+                break;
+            default:
+                NSLog ( @"GL error occurred: %u UNKNOWN, %@",  error , message );
+                break;
+        }
     }
-  }
 }
 
 - (CGLContextObj)copyCGLContextForPixelFormat:(CGLPixelFormatObj)pixelFormat;
