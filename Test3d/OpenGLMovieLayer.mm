@@ -445,7 +445,6 @@ const int EYE_RIGHT = -1;
 
     // Render the eye quads
     glBegin(GL_QUADS);
-    [self reportError:@"after glBegin"];
 
     // Upper left texture
     glTexCoord2f(textureBounds.origin.x,
@@ -474,8 +473,6 @@ const int EYE_RIGHT = -1;
     // Upper left viewport
     glVertex2f  (viewBounds.origin.x,
                  viewBounds.origin.y);
-
-    [self reportError:@"after eye quad rendered"];
 
     glEnd();
     [self reportError:@"after glEnd"];
