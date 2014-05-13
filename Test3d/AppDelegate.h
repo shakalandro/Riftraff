@@ -21,5 +21,6 @@
 - (void)setUpMenuItems;
 - (void)startMovie:(NSURL*) url;
 - (IBAction)openDocument:(id)pId;
+- (IBAction)windowDidResize:(id)pId;
 
 @end

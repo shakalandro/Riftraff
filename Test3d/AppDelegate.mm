@@ -14,6 +14,12 @@
 {
   OVR::System::Init();
 
+  [[NSNotificationCenter defaultCenter]
+    addObserver:self
+    selector:@selector(windowDidResize:)
+    name:NSWindowDidResizeNotification
+    object:nil];
+
   [self setUpMenuItems];
   //[self openDocument:self];
   [self startMovie:[[NSBundle mainBundle] URLForResource:@"shrek" withExtension:@"mp4"]];
@@ -57,6 +63,10 @@
       [self startMovie:url];
     }
   }];
+}
+
+- (IBAction)windowDidResize:(id)pId {
+  NSLog(@"Window did resize");
 }
 
 @end

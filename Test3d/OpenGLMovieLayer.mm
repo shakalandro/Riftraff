@@ -7,135 +7,6 @@
 @synthesize movie;
 @synthesize output;
 
-static const GLchar* vertexShaderText =
-" varying float xpos; \n"
-" varying float ypos; \n"
-" \n"
-" void main(void) \n"
-" { \n"
-"     gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; \n"
-"     // gl_TexCoord[0] = gl_MultiTexCoord0; \n"
-" \n"
-"     xpos = clamp(gl_Vertex.x,0.0,1.0); \n"
-"     ypos = clamp(gl_Vertex.y,0.0,1.0); \n"
-" \n"
-"     xpos = clamp(gl_MultiTexCoord0.x,0.0,1.0); \n"
-"     ypos = clamp(gl_MultiTexCoord0.y,0.0,1.0); \n"
-" }\n";
-
-static const GLchar* fragmentShaderText =
-" uniform sampler2D texture; \n"
-" \n"
-" varying float xpos; \n"
-" varying float ypos; \n"
-" \n"
-" void main() \n"
-" { \n"
-"     gl_FragColor = vec4(xpos, ypos, 0.0, 1.0); \n"
-"     // gl_FragColor = texture2D(texture, vec2(xpos, ypos)); \n"
-"     // gl_FragColor = texture2DProj(texture, vec2(xpos, ypos)); \n"
-"     // gl_FragColor = texture2DProj(texture, vec2(gl_TexCoord[0])); \n"
-" } \n";
-
-static const GLchar* fragmentShaderTextOrig =
-" uniform Texture2D Texture : register(t0); \n"
-" uniform SamplerState Linear : register(s0); \n"
-" \n"
-" uniform float2 LensCenter; \n"
-" uniform float2 ScreenCenter; \n"
-" uniform float2 Scale; \n"
-" uniform float2 ScaleIn; \n"
-" uniform float4 HmdWarpParam; \n"
-" \n"
-" // Scales input texture coordinates for distortion. \n"
-" float2 HmdWarp(float2 in01) \n"
-" { \n"
-"     // Scales to [-1, 1] \n"
-"     float2 theta = (in01 - LensCenter) * ScaleIn; \n"
-"     float rSq = theta.x * theta.x + theta.y * theta.y; \n"
-"     float2 rvector= theta * ( \n"
-"                              HmdWarpParam.x + \n"
-"                              HmdWarpParam.y * rSq + \n"
-"                              HmdWarpParam.z * rSq * rSq + \n"
-"                              HmdWarpParam.w * rSq * rSq * rSq \n"
-"                             ); \n"
-"     return LensCenter + Scale * rvector; \n"
-" } \n"
-" \n"
-" float4 main(in float4 oPosition : SV_Position, \n"
-"             in float4 oColor : COLOR, \n"
-"             in float2 oTexCoord : TEXCOORD0 \n"
-"            ) : SV_Target \n"
-" { \n"
-"     float2 tc = HmdWarp(oTexCoord); \n"
-"     if (any(clamp(tc, \n"
-"                   ScreenCenter-float2(0.25,0.5), \n"
-"                   ScreenCenter+float2(0.25, 0.5) \n"
-"                  ) - tc \n"
-"            ) \n"
-"        ) \n"
-"     {\n"
-"         // Render black pixel \n"
-"         return float4(0.0, 0.0, 1.0, 1.0); \n"
-"     }\n"
-" \n"
-" \n"
-" \n"
-" \n"
-"         // Grab the texture pixel from the distorted coords \n"
-"     return Texture.Sample(Linear, tc); \n"
-" \n"
-" } \n";
-
-static const GLchar* fragmentShaderTextAlt =
-" uniform sampler2D texture; \n"
-" \n"
-" uniform vec2 LensCenter; \n"
-" uniform vec2 ScreenCenter; \n"
-" uniform vec2 Scale; \n"
-" uniform vec2 ScaleIn; \n"
-" uniform vec4 HmdWarpParam; \n"
-" \n"
-" // Scales input texture coordinates for distortion. \n"
-" vec2 HmdWarp(vec2 texIn) \n"
-" { \n"
-"     // Scales to [-1, 1] \n"
-"     vec2 theta = (texIn - LensCenter) * ScaleIn; \n"
-"     float rSq = theta.x * theta.x + theta.y * theta.y; \n"
-"     vec2 theta1 = theta * ( \n"
-"                            HmdWarpParam.x +  \n"
-"                            HmdWarpParam.y * rSq +  \n"
-"                            HmdWarpParam.z * rSq * rSq +  \n"
-"                            HmdWarpParam.w * rSq * rSq * rSq \n"
-"                           ); \n"
-"     return LensCenter + Scale * theta1; \n"
-" } \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" void main() \n"
-" { \n"
-"     vec2 tc = HmdWarp(gl_TexCoord[0].xy); \n"
-"     if (any(notEqual(clamp(tc, \n"
-"                            ScreenCenter-vec2(0.25,0.5), \n"
-"                            ScreenCenter+vec2(0.25, 0.5) \n"
-"                           ) - tc, \n"
-"                      vec2(0.0, 0.0) \n"
-"                     ) \n"
-"            ) \n"
-"        ) \n"
-"     { \n"
-"         // Render green pixel \n"
-"         gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0); \n"
-"     } \n"
-"     else \n"
-"     { \n"
-"         // Grab the texture pixel from the distorted coords \n"
-"         gl_FragColor = texture2D(texture, tc); \n"
-"     } \n"
-" } \n";
-
 const int EYE_LEFT = 1;
 const int EYE_RIGHT = -1;
 
@@ -199,10 +70,11 @@ const int EYE_RIGHT = -1;
 
     if (!prog) {
         // Create ID for shaders
-        vertexShader = [self compileShader:GL_VERTEX_SHADER withSource:(const GLchar *const *)&vertexShaderText];
-        [self reportError:@"after compile vertex shader"];
-        fragmentShader = [self compileShader:GL_FRAGMENT_SHADER withSource:(const GLchar *const *)&fragmentShaderText];
-        [self reportError:@"after compile fragment shader"];
+        const GLchar* vertexShaderSource = [OpenGLMovieLayer getShaderString:[[NSBundle mainBundle] URLForResource:@"vertexShader" withExtension:@"glsl"]];
+        vertexShader = [self compileShader:GL_VERTEX_SHADER withSource:(const GLchar *const *)&vertexShaderSource];
+
+        const GLchar* fragmentShaderSource = [OpenGLMovieLayer getShaderString:[[NSBundle mainBundle] URLForResource:@"fragmentShader" withExtension:@"glsl"]];
+        fragmentShader = [self compileShader:GL_FRAGMENT_SHADER withSource:(const GLchar *const *)&fragmentShaderSource];
 
         prog = glCreateProgram();
         [self reportError:@"after glCreateProgram"];
@@ -527,6 +399,13 @@ const int EYE_RIGHT = -1;
 	CVOpenGLTextureRelease(currentFrame);
     [[[self movie] currentItem] removeOutput:output];
     output = NULL;
+}
+
++ (GLchar*)getShaderString:(NSURL*)fromURL {
+  NSLog(@"loading from %@", [fromURL absoluteURL]);
+  NSString* str = [NSString stringWithContentsOfURL:[fromURL absoluteURL] encoding:NSASCIIStringEncoding error:nil];
+  NSLog(@"%@",str);
+  return (GLchar*)[str UTF8String];
 }
 
 @end

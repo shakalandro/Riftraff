@@ -41,5 +41,6 @@ using namespace OVR::Util::Render;
 
 - (id)initWithMovie:(AVPlayer*)m;
 - (void)setupVisualContext:(CGLContextObj)glContext withPixelFormat:(CGLPixelFormatObj)pixelFormat;
++ (GLchar*)getShaderString:(NSURL*)fromURL;
 
 @end
