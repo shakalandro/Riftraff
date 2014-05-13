@@ -51,6 +51,12 @@ const int EYE_RIGHT = -1;
     hmdInfo.DesktopX = 0;
     hmdInfo.DesktopY = 0;
 
+    Ptr<DeviceManager> pManager;
+    Ptr<HMDDevice>     pHMD;
+    pManager = *DeviceManager::Create();
+    pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
+    pHMD->GetDeviceInfo(&hmdInfo);
+
     stereoConfig.SetHMDInfo(hmdInfo);
 }
 
@@ -234,20 +240,10 @@ const int EYE_RIGHT = -1;
     // Set the projection view matrix
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-
     glOrtho(viewBounds.origin.x,
             viewBounds.origin.x + viewBounds.size.width,
             viewBounds.origin.y,
             viewBounds.origin.y + viewBounds.size.height,
-            -1.0, 1.0);
-
-    // Set the texture matrix
-    glMatrixMode(GL_TEXTURE);
-    glLoadIdentity();
-    glOrtho(frameBounds.origin.x,
-            frameBounds.origin.x + frameBounds.size.width,
-            frameBounds.origin.y,
-            frameBounds.origin.y + frameBounds.size.height,
             -1.0, 1.0);
 
     // Configure the shader
@@ -282,34 +278,40 @@ const int EYE_RIGHT = -1;
         withTextureBounds:(struct CGRect)textureBounds
         forEye:(int)eye
 {
-    // Get the HMD distortion configuration
-    const DistortionConfig & distortion = stereoConfig.GetDistortionConfig();
+    // Set the texture matrix
+    glMatrixMode(GL_TEXTURE);
+    glLoadIdentity();
+    glOrtho(textureBounds.origin.x,
+            textureBounds.origin.x + textureBounds.size.width,
+            textureBounds.origin.y,
+            textureBounds.origin.y + textureBounds.size.height,
+            -1.0, 1.0);
 
 //    float w = float(viewBounds.size.width) / float(textureBounds.size.width*2);
 //    float h = float(viewBounds.size.height) / float(textureBounds.size.height);
 //    float x = float(textureBounds.origin.x) / float(textureBounds.size.width*2);
 //    float y = float(textureBounds.origin.y) / float(textureBounds.size.height);
 
-    float w = 1.0;
-    float h = 1.0;
-    float x = 0.0;
-    float y = 0.0;
+    float w = 2.0;
+    float h = 2.0;
+    float x = -1.0;
+    float y = -1.0;
 
     float aspect = stereoConfig.GetAspect();
-    float scaleFactor = 1.0f / stereoConfig.GetDistortionScale();
-    float eyeOffset = eye * distortion.XCenterOffset;
+    float scale = stereoConfig.GetDistortionScale();
+    float scaleFactor = 1.0f / scale;
+    float eyeOffset = eye * stereoConfig.GetProjectionCenterOffset();
 
-    float param_x = x + (w + eyeOffset * 0.5f) * 0.5f;
+    float param_x = x + w * 0.5f;
     float param_y = y + h * 0.5f;
-    // Eye center
-    glUniform2f(lensCenterLoc,
+    // Screen center
+    glUniform2f(screenCenterLoc,
                 param_x,
                 param_y);
 
-    param_x = x + w * 0.5f;
-    param_y = y + h * 0.5f;
-    // Screen center
-    glUniform2f(screenCenterLoc,
+    param_x = param_x + eyeOffset;
+    // Eye center
+    glUniform2f(lensCenterLoc,
                 param_x,
                 param_y);
 
@@ -329,7 +331,7 @@ const int EYE_RIGHT = -1;
                 param_y);
 
     // Static array of distortion coefficients for the barrel transform function
-    glUniform4fv(hmdWarpParamLoc, 1, distortion.K);
+    glUniform4fv(hmdWarpParamLoc, 1, stereoConfig.GetDistortionConfig().K);
 
     // Render the eye quads
     glBegin(GL_QUADS);
