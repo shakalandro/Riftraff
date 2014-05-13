@@ -760,6 +760,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C9180311922C6D100CD2C77 /* fragmentShaderPassThrough.glsl in Resources */,
 				8C9180261922BDB100CD2C77 /* vertexShader.glsl in Resources */,
 				52643C3D191C28380008350D /* InfoPlist.strings in Resources */,
 				52643C4B191C28380008350D /* Images.xcassets in Resources */,

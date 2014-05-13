@@ -30,13 +30,13 @@
   NSLog(@"playing url = %@", url);
   AVPlayer *player = [AVPlayer playerWithURL:[url absoluteURL]];
 
-  OpenGLMovieLayer *layer = [[OpenGLMovieLayer alloc] initWithMovie:player];
-  [layer setFrame:NSRectToCGRect([[[self window] contentView] bounds])];
+  _layer = [[OpenGLMovieLayer alloc] initWithMovie:player];
+  [_layer setFrame:NSRectToCGRect([[[self window] contentView] bounds])];
 
   [[[self window] contentView] setWantsLayer:YES];
-  [[[[self window] contentView] layer] addSublayer:layer];
-  [[layer movie] seekToTime:kCMTimeZero];
-  [[layer movie] play];
+  [[[[self window] contentView] layer] addSublayer:_layer];
+  [[_layer movie] seekToTime:kCMTimeZero];
+  [[_layer movie] play];
 }
 
 - (void)setUpMenuItems
@@ -67,6 +67,8 @@
 
 - (IBAction)windowDidResize:(id)pId {
   NSLog(@"Window did resize");
+  [_layer setFrame:NSRectToCGRect([[[self window] contentView] bounds])];
+  [[[[self window] contentView] layer] addSublayer:_layer];
 }
 
 @end

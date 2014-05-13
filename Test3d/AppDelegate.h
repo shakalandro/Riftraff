@@ -17,6 +17,7 @@
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
+@property OpenGLMovieLayer* layer;
 
 - (void)setUpMenuItems;
 - (void)startMovie:(NSURL*) url;
