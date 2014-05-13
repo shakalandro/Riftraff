@@ -1,7 +1,6 @@
 varying float xpos;
 varying float ypos;
-
-void main(void)
+void main()
 {
     gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
     gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;
@@ -21,4 +20,4 @@ void main(void)
     // Texture coords scaled to [-1,1]
     xpos = gl_TexCoord[0].x;
     ypos = gl_TexCoord[0].y;
-};
+}

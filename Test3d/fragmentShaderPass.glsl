@@ -1,8 +1,6 @@
 uniform sampler2D texture;
-
 varying float xpos;
 varying float ypos;
-
 void main()
 {
     gl_FragColor = vec4(abs(xpos), abs(ypos), 0.0, 1.0);

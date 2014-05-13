@@ -1,14 +1,11 @@
 uniform sampler2D texture;
-
 uniform vec2 LensCenter;
 uniform vec2 ScreenCenter;
 uniform vec2 Scale;
 uniform vec2 ScaleIn;
 uniform vec4 HmdWarpParam;
-
 varying float xpos;
 varying float ypos;
-
 // Scales input texture coordinates for distortion.
 vec2 HmdWarp(vec2 in01)
 {
@@ -22,8 +19,7 @@ vec2 HmdWarp(vec2 in01)
                            );
     return LensCenter + Scale * rvector;
 }
-
-void main()
+void main(void)
 {
     vec2 tc = HmdWarp(vec2(xpos-LensCenter.x, ypos));
 
