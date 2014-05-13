@@ -18,4 +18,8 @@
 
 @property (assign) IBOutlet NSWindow *window;
 
+- (void)setUpMenuItems;
+- (void)startMovie:(NSURL*) url;
+- (IBAction)openDocument:(id)pId;
+
 @end

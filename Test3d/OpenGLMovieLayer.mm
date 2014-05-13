@@ -360,6 +360,7 @@ const int EYE_RIGHT = -1;
     // Set the projection view matrix
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+
     glOrtho(viewBounds.origin.x,
             viewBounds.origin.x + viewBounds.size.width,
             viewBounds.origin.y,
