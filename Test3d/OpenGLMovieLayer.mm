@@ -14,16 +14,26 @@ static const GLchar* vertexShaderText =
 " void main(void) \n"
 " { \n"
 "     gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; \n"
-"     // gl_TexCoord[0] = gl_MultiTexCoord0; \n"
+"     gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0; \n"
 " \n"
-"     xpos = clamp(gl_Vertex.x,0.0,1.0); \n"
-"     ypos = clamp(gl_Vertex.y,0.0,1.0); \n"
+"     // Geometry coords \n"
+"     xpos = gl_Vertex.x; \n"
+"     ypos = gl_Vertex.y; \n"
 " \n"
-"     xpos = clamp(gl_MultiTexCoord0.x,0.0,1.0); \n"
-"     ypos = clamp(gl_MultiTexCoord0.y,0.0,1.0); \n"
+"     // Geometry coords scaled to [-1,1] \n"
+"     xpos = gl_Position.x; \n"
+"     ypos = gl_Position.y; \n"
+" \n"
+"     // Texture coords \n"
+"     xpos = gl_MultiTexCoord0.x; \n"
+"     ypos = gl_MultiTexCoord0.y; \n"
+" \n"
+"     // Texture coords scaled to [-1,1] \n"
+"     xpos = gl_TexCoord[0].x; \n"
+"     ypos = gl_TexCoord[0].y; \n"
 " }\n";
 
-static const GLchar* fragmentShaderText =
+static const GLchar* fragmentShaderTextPassthrough =
 " uniform sampler2D texture; \n"
 " \n"
 " varying float xpos; \n"
@@ -31,63 +41,12 @@ static const GLchar* fragmentShaderText =
 " \n"
 " void main() \n"
 " { \n"
-"     gl_FragColor = vec4(xpos, ypos, 0.0, 1.0); \n"
-"     // gl_FragColor = texture2D(texture, vec2(xpos, ypos)); \n"
-"     // gl_FragColor = texture2DProj(texture, vec2(xpos, ypos)); \n"
-"     // gl_FragColor = texture2DProj(texture, vec2(gl_TexCoord[0])); \n"
+"     gl_FragColor = vec4(abs(xpos), abs(ypos), 0.0, 1.0); \n"
+"     //gl_FragColor = texture2D(texture, vec2(xpos, ypos)); \n"
+"     //gl_FragColor = texture2DProj(texture, vec2(xpos, ypos)); \n"
 " } \n";
 
 static const GLchar* fragmentShaderTextOrig =
-" uniform Texture2D Texture : register(t0); \n"
-" uniform SamplerState Linear : register(s0); \n"
-" \n"
-" uniform float2 LensCenter; \n"
-" uniform float2 ScreenCenter; \n"
-" uniform float2 Scale; \n"
-" uniform float2 ScaleIn; \n"
-" uniform float4 HmdWarpParam; \n"
-" \n"
-" // Scales input texture coordinates for distortion. \n"
-" float2 HmdWarp(float2 in01) \n"
-" { \n"
-"     // Scales to [-1, 1] \n"
-"     float2 theta = (in01 - LensCenter) * ScaleIn; \n"
-"     float rSq = theta.x * theta.x + theta.y * theta.y; \n"
-"     float2 rvector= theta * ( \n"
-"                              HmdWarpParam.x + \n"
-"                              HmdWarpParam.y * rSq + \n"
-"                              HmdWarpParam.z * rSq * rSq + \n"
-"                              HmdWarpParam.w * rSq * rSq * rSq \n"
-"                             ); \n"
-"     return LensCenter + Scale * rvector; \n"
-" } \n"
-" \n"
-" float4 main(in float4 oPosition : SV_Position, \n"
-"             in float4 oColor : COLOR, \n"
-"             in float2 oTexCoord : TEXCOORD0 \n"
-"            ) : SV_Target \n"
-" { \n"
-"     float2 tc = HmdWarp(oTexCoord); \n"
-"     if (any(clamp(tc, \n"
-"                   ScreenCenter-float2(0.25,0.5), \n"
-"                   ScreenCenter+float2(0.25, 0.5) \n"
-"                  ) - tc \n"
-"            ) \n"
-"        ) \n"
-"     {\n"
-"         // Render black pixel \n"
-"         return float4(0.0, 0.0, 1.0, 1.0); \n"
-"     }\n"
-" \n"
-" \n"
-" \n"
-" \n"
-"         // Grab the texture pixel from the distorted coords \n"
-"     return Texture.Sample(Linear, tc); \n"
-" \n"
-" } \n";
-
-static const GLchar* fragmentShaderTextAlt =
 " uniform sampler2D texture; \n"
 " \n"
 " uniform vec2 LensCenter; \n"
@@ -96,30 +55,43 @@ static const GLchar* fragmentShaderTextAlt =
 " uniform vec2 ScaleIn; \n"
 " uniform vec4 HmdWarpParam; \n"
 " \n"
+" uniform float Eye; \n"
+" \n"
+" varying float xpos; \n"
+" varying float ypos; \n"
+" \n"
 " // Scales input texture coordinates for distortion. \n"
-" vec2 HmdWarp(vec2 texIn) \n"
+" vec2 HmdWarp(vec2 in01) \n"
 " { \n"
-"     // Scales to [-1, 1] \n"
-"     vec2 theta = (texIn - LensCenter) * ScaleIn; \n"
+"     vec2 theta = (in01 - LensCenter); \n"
 "     float rSq = theta.x * theta.x + theta.y * theta.y; \n"
-"     vec2 theta1 = theta * ( \n"
-"                            HmdWarpParam.x +  \n"
-"                            HmdWarpParam.y * rSq +  \n"
-"                            HmdWarpParam.z * rSq * rSq +  \n"
-"                            HmdWarpParam.w * rSq * rSq * rSq \n"
-"                           ); \n"
-"     return LensCenter + Scale * theta1; \n"
+"     vec2 rvector = theta * ( \n"
+"                              HmdWarpParam.x + \n"
+"                              HmdWarpParam.y * rSq + \n"
+"                              HmdWarpParam.z * rSq * rSq + \n"
+"                              HmdWarpParam.w * rSq * rSq * rSq \n"
+"                             ); \n"
+"     return LensCenter + rvector; \n"
 " } \n"
-" \n"
-" \n"
-" \n"
 " \n"
 " void main() \n"
 " { \n"
-"     vec2 tc = HmdWarp(gl_TexCoord[0].xy); \n"
+"     vec2 tc = HmdWarp(vec2(xpos, ypos)); \n"
+" \n"
+"     // Grab the texture pixel from the distorted coords \n"
+"     // return Texture.Sample(Linear, tc); \n"
+"     // gl_FragColor = vec4(abs(xpos), abs(ypos), 0.0, 1.0); \n"
+"     // tc = vec2(xpos, ypos); \n"
+"     gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0); // green \n"
+"     if (tc.y < -2.0) gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); // black \n"
+"     if (tc.y < -1.0) gl_FragColor = vec4(xpos, 0.0, 0.0, 1.0); // red \n"
+"     if (tc.y < -0.0) gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0); // yellow \n"
+"     if (tc.y > 0.0) gl_FragColor = vec4(xpos, ypos, 0.0, 1.0); // cyan \n"
+"     if (tc.y > 1.0) gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0); // blue \n"
+"     if (tc.y > 2.0) gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); // white \n"
 "     if (any(notEqual(clamp(tc, \n"
 "                            ScreenCenter-vec2(0.25,0.5), \n"
-"                            ScreenCenter+vec2(0.25, 0.5) \n"
+"                            ScreenCenter+vec2(0.25,0.5) \n"
 "                           ) - tc, \n"
 "                      vec2(0.0, 0.0) \n"
 "                     ) \n"
@@ -127,14 +99,11 @@ static const GLchar* fragmentShaderTextAlt =
 "        ) \n"
 "     { \n"
 "         // Render green pixel \n"
-"         gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0); \n"
-"     } \n"
-"     else \n"
-"     { \n"
-"         // Grab the texture pixel from the distorted coords \n"
-"         gl_FragColor = texture2D(texture, tc); \n"
+"         gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); \n"
 "     } \n"
 " } \n";
+
+static const GLchar* fragmentShaderText = fragmentShaderTextOrig;
 
 const int EYE_LEFT = 1;
 const int EYE_RIGHT = -1;
@@ -337,10 +306,11 @@ const int EYE_RIGHT = -1;
     GLenum textureName = CVOpenGLTextureGetName(currentFrame);
 
     // Enable target for the current frame
-    glEnable(textureTarget);
+    //    glEnable(textureTarget);
+    glEnable(GL_TEXTURE_2D);
 
     // Set the current texture as the active one
-    glActiveTexture(textureTarget);
+    glActiveTexture(textureTarget-GL_TEXTURE0);
 
     // Bind to the current frame texture
     // This tells OpenGL which texture we are wanting
@@ -349,9 +319,10 @@ const int EYE_RIGHT = -1;
     // to the context.
     glBindTexture(textureTarget, textureName);
 
-    // Set the texture matrix
-    glMatrixMode(GL_TEXTURE);
-    glLoadIdentity();
+//    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//
+//    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureName, 0);
 
     // Set the model view matrix
     glMatrixMode(GL_MODELVIEW);
@@ -365,22 +336,23 @@ const int EYE_RIGHT = -1;
             viewBounds.origin.x + viewBounds.size.width,
             viewBounds.origin.y,
             viewBounds.origin.y + viewBounds.size.height,
-            0, 1.0);
+            -1.0, 1.0);
 
-    // TODO: Fix the texture loading
-    // Currently this renders with a fragment shader
-    // that uses the texture coordinates as red and green
-    // components of the fragment color.
-    // This proves that the shader receives the correct
-    // texture coordinates and the problem is with the
-    // texture sampler we are trying to use
+    // Set the texture matrix
+    glMatrixMode(GL_TEXTURE);
+    glLoadIdentity();
+    glOrtho(frameBounds.origin.x,
+            frameBounds.origin.x + frameBounds.size.width,
+            frameBounds.origin.y,
+            frameBounds.origin.y + frameBounds.size.height,
+            -1.0, 1.0);
 
     // Configure the shader
     glUseProgram(prog);
     [self reportError:@"after use program"];
 
     // Load the texture index in the sampler
-	glUniform1i(textureLoc, textureTarget-GL_TEXTURE0);
+//	glUniform1i(textureLoc, textureTarget-GL_TEXTURE0);
 
     // Render left eye
     [self renderEyeInViewBounds:leftEyeViewBounds
@@ -410,36 +382,48 @@ const int EYE_RIGHT = -1;
     // Get the HMD distortion configuration
     const DistortionConfig & distortion = stereoConfig.GetDistortionConfig();
 
-    // The shader is applied in [0,1] coordinates
-    float w = float(viewBounds.size.width) / float(textureBounds.size.width*2);
-    float h = float(viewBounds.size.height) / float(textureBounds.size.height);
-    float x = float(textureBounds.origin.x) / float(textureBounds.size.width*2);
-    float y = float(textureBounds.origin.y) / float(textureBounds.size.height);
+//    float w = float(viewBounds.size.width) / float(textureBounds.size.width*2);
+//    float h = float(viewBounds.size.height) / float(textureBounds.size.height);
+//    float x = float(textureBounds.origin.x) / float(textureBounds.size.width*2);
+//    float y = float(textureBounds.origin.y) / float(textureBounds.size.height);
+
+    float w = 1.0;
+    float h = 1.0;
+    float x = 0.0;
+    float y = 0.0;
 
     float aspect = stereoConfig.GetAspect();
     float scaleFactor = 1.0f / stereoConfig.GetDistortionScale();
     float eyeOffset = eye * distortion.XCenterOffset;
 
+    float param_x = x + (w + eyeOffset * 0.5f) * 0.5f;
+    float param_y = y + h * 0.5f;
     // Eye center
     glUniform2f(lensCenterLoc,
-                x + (w + eyeOffset * 0.5f) * 0.5f,
-                y + h * 0.5f);
+                param_x,
+                param_y);
 
+    param_x = x + w * 0.5f;
+    param_y = y + h * 0.5f;
     // Screen center
     glUniform2f(screenCenterLoc,
-                x + w * 0.5f,
-                y + h * 0.5f);
+                param_x,
+                param_y);
 
+    param_x = (w / 2.0f) * scaleFactor;
+    param_y = (h / 2) * scaleFactor * aspect;
     // Scale out the distorted sample
     glUniform2f(scaleLoc,
-                (w / 2.0f) * scaleFactor,
-                (h / 2) * scaleFactor * aspect);
+                param_x,
+                param_y);
 
+    param_x = 2.0f / w;
+    param_y = (2.0f / h) / aspect;
     // Scale in the texture coordinates to [-1,1] in order
     // to do the distortion properly
     glUniform2f(scaleInLoc,
-                2.0f / w,
-                (2.0f / h) / aspect);
+                param_x,
+                param_y);
 
     // Static array of distortion coefficients for the barrel transform function
     glUniform4fv(hmdWarpParamLoc, 1, distortion.K);
@@ -449,6 +433,7 @@ const int EYE_RIGHT = -1;
 
     // Upper left texture
     glTexCoord2f(textureBounds.origin.x,
+//    glTexCoord2f(0, //textureBounds.origin.x,
                  textureBounds.origin.y);
     // Lower left viewport
     glVertex2f  (viewBounds.origin.x,
@@ -456,6 +441,7 @@ const int EYE_RIGHT = -1;
 
     // Upper right texture
     glTexCoord2f(textureBounds.origin.x + textureBounds.size.width,
+//    glTexCoord2f(0 /*textureBounds.origin.x*/ + textureBounds.size.width,
                  textureBounds.origin.y);
     // Lower right viewport
     glVertex2f  (viewBounds.origin.x + viewBounds.size.width,
@@ -463,6 +449,7 @@ const int EYE_RIGHT = -1;
 
     // Lower right texture
     glTexCoord2f(textureBounds.origin.x + textureBounds.size.width,
+//    glTexCoord2f(0 /*textureBounds.origin.x*/ + textureBounds.size.width,
                  textureBounds.origin.y + textureBounds.size.height);
     // Upper right viewport
     glVertex2f  (viewBounds.origin.x + viewBounds.size.width,
@@ -470,6 +457,7 @@ const int EYE_RIGHT = -1;
 
     // Lower left texture
     glTexCoord2f(textureBounds.origin.x,
+//    glTexCoord2f(0, //textureBounds.origin.x,
                  textureBounds.origin.y + textureBounds.size.height);
     // Upper left viewport
     glVertex2f  (viewBounds.origin.x,
