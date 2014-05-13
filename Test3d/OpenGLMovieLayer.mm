@@ -1,6 +1,7 @@
 #import "OpenGLMovieLayer.h"
 #import <OpenGL/gl.h>
 #import <CoreVideo/CVPixelBuffer.h>
+#import <CoreVideo/CVOpenGLTextureCache.h>
 
 @implementation OpenGLMovieLayer
 
@@ -82,7 +83,7 @@ const int EYE_RIGHT = -1;
         const GLchar* vertexShaderSource = [OpenGLMovieLayer getShaderString:[[NSBundle mainBundle] URLForResource:@"vertexShader" withExtension:@"glsl"]];
         vertexShader = [self compileShader:GL_VERTEX_SHADER withSource:(const GLchar *const *)&vertexShaderSource];
 
-        const GLchar* fragmentShaderSource = [OpenGLMovieLayer getShaderString:[[NSBundle mainBundle] URLForResource:@"fragmentShaderRift" withExtension:@"glsl"]];
+        const GLchar* fragmentShaderSource = [OpenGLMovieLayer getShaderString:[[NSBundle mainBundle] URLForResource:@"fragmentShaderPass" withExtension:@"glsl"]];
         fragmentShader = [self compileShader:GL_FRAGMENT_SHADER withSource:(const GLchar *const *)&fragmentShaderSource];
 
         prog = glCreateProgram();
@@ -215,15 +216,17 @@ const int EYE_RIGHT = -1;
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    // default target for CoreVideo textures is GL_TEXTURE_RECTANGLE_EXT
     GLenum textureTarget = CVOpenGLTextureGetTarget(currentFrame);
     GLenum textureName = CVOpenGLTextureGetName(currentFrame);
 
-    // Enable target for the current frame
-    //    glEnable(textureTarget);
-    glEnable(GL_TEXTURE_2D);
+    // Set unit 0 as the active target unit
+    glActiveTexture(0);
+    [self reportError:@"after active texture"];
 
-    // Set the current texture as the active one
-    glActiveTexture(textureTarget-GL_TEXTURE0);
+    // Enable the texture target for the current frame
+    glEnable(textureTarget);
+    [self reportError:@"after enable"];
 
     // Bind to the current frame texture
     // This tells OpenGL which texture we are wanting
@@ -231,11 +234,13 @@ const int EYE_RIGHT = -1;
     // glVertex calls, our current frame gets drawn
     // to the context.
     glBindTexture(textureTarget, textureName);
+    [self reportError:@"after bind texture"];
 
 //    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 //    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 //
 //    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureName, 0);
+//    [self reportError:@"after frame buffer texture"];
 
     // Set the model view matrix
     glMatrixMode(GL_MODELVIEW);
@@ -255,7 +260,7 @@ const int EYE_RIGHT = -1;
     [self reportError:@"after use program"];
 
     // Load the texture index in the sampler
-//	glUniform1i(textureLoc, textureTarget-GL_TEXTURE0);
+	glUniform1i(textureLoc, 0);
 
     // Render left eye
     [self renderEyeInViewBounds:leftEyeViewBounds
@@ -342,7 +347,6 @@ const int EYE_RIGHT = -1;
 
     // Upper left texture
     glTexCoord2f(textureBounds.origin.x,
-//    glTexCoord2f(0, //textureBounds.origin.x,
                  textureBounds.origin.y);
     // Lower left viewport
     glVertex2f  (viewBounds.origin.x,
@@ -350,7 +354,6 @@ const int EYE_RIGHT = -1;
 
     // Upper right texture
     glTexCoord2f(textureBounds.origin.x + textureBounds.size.width,
-//    glTexCoord2f(0 /*textureBounds.origin.x*/ + textureBounds.size.width,
                  textureBounds.origin.y);
     // Lower right viewport
     glVertex2f  (viewBounds.origin.x + viewBounds.size.width,
@@ -358,7 +361,6 @@ const int EYE_RIGHT = -1;
 
     // Lower right texture
     glTexCoord2f(textureBounds.origin.x + textureBounds.size.width,
-//    glTexCoord2f(0 /*textureBounds.origin.x*/ + textureBounds.size.width,
                  textureBounds.origin.y + textureBounds.size.height);
     // Upper right viewport
     glVertex2f  (viewBounds.origin.x + viewBounds.size.width,
@@ -366,7 +368,6 @@ const int EYE_RIGHT = -1;
 
     // Lower left texture
     glTexCoord2f(textureBounds.origin.x,
-//    glTexCoord2f(0, //textureBounds.origin.x,
                  textureBounds.origin.y + textureBounds.size.height);
     // Upper left viewport
     glVertex2f  (viewBounds.origin.x,
