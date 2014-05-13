@@ -55,9 +55,9 @@ const int EYE_RIGHT = -1;
     Ptr<DeviceManager> pManager;
     Ptr<HMDDevice>     pHMD;
     pManager = *DeviceManager::Create();
+    pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
     if (pHMD != NULL) {
-      pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
-      pHMD->GetDeviceInfo(&hmdInfo);
+        pHMD->GetDeviceInfo(&hmdInfo);
     }
 
     stereoConfig.SetHMDInfo(hmdInfo);
