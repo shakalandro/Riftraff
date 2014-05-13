@@ -20,6 +20,7 @@ const int EYE_RIGHT = -1;
     [self setContentsGravity:kCAGravityResizeAspect];
     CGColorRef black = CGColorCreateGenericRGB(0, 0, 0, 1);
     [self setBackgroundColor:black];
+    [self setNeedsDisplayOnBoundsChange:YES];
     CFRelease(black);
     
     [self setMovie:m];
@@ -201,6 +202,7 @@ const int EYE_RIGHT = -1;
 {
     // Self coordinates of the view
     CGRect viewBounds = [self bounds];
+    NSLog(@"%f, %f", viewBounds.size.width, viewBounds.size.height);
     CGRect leftEyeViewBounds = CGRectMake(viewBounds.origin.x,
                                           viewBounds.origin.y,
                                           viewBounds.size.width/2,
