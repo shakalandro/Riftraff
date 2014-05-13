@@ -116,9 +116,8 @@
 		8C91801A191C413800CD2C77 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C918019191C413800CD2C77 /* OpenGL.framework */; };
 		8C91801C191C414000CD2C77 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C91801B191C414000CD2C77 /* IOKit.framework */; };
 		8C9180261922BDB100CD2C77 /* vertexShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 8C9180251922BDB100CD2C77 /* vertexShader.glsl */; };
-		8C91802B1922C3B600CD2C77 /* fragmentShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 8C91802A1922C3B600CD2C77 /* fragmentShader.glsl */; };
-		8C91802D1922C48400CD2C77 /* fragmentShaderOrig.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 8C91802C1922C48400CD2C77 /* fragmentShaderOrig.glsl */; };
-		8C91802F1922C49700CD2C77 /* fragmentShaderAlt.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 8C91802E1922C49700CD2C77 /* fragmentShaderAlt.glsl */; };
+		8C91802B1922C3B600CD2C77 /* fragmentShaderPass.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 8C91802A1922C3B600CD2C77 /* fragmentShaderPass.glsl */; };
+		8C91802D1922C48400CD2C77 /* fragmentShaderRift.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 8C91802C1922C48400CD2C77 /* fragmentShaderRift.glsl */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -274,9 +273,8 @@
 		8C918019191C413800CD2C77 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		8C91801B191C414000CD2C77 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		8C9180251922BDB100CD2C77 /* vertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vertexShader.glsl; sourceTree = "<group>"; };
-		8C91802A1922C3B600CD2C77 /* fragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fragmentShader.glsl; sourceTree = "<group>"; };
-		8C91802C1922C48400CD2C77 /* fragmentShaderOrig.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fragmentShaderOrig.glsl; sourceTree = "<group>"; };
-		8C91802E1922C49700CD2C77 /* fragmentShaderAlt.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fragmentShaderAlt.glsl; sourceTree = "<group>"; };
+		8C91802A1922C3B600CD2C77 /* fragmentShaderPass.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fragmentShaderPass.glsl; sourceTree = "<group>"; };
+		8C91802C1922C48400CD2C77 /* fragmentShaderRift.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fragmentShaderRift.glsl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -600,9 +598,8 @@
 			isa = PBXGroup;
 			children = (
 				8C9180251922BDB100CD2C77 /* vertexShader.glsl */,
-				8C91802A1922C3B600CD2C77 /* fragmentShader.glsl */,
-				8C91802C1922C48400CD2C77 /* fragmentShaderOrig.glsl */,
-				8C91802E1922C49700CD2C77 /* fragmentShaderAlt.glsl */,
+				8C91802A1922C3B600CD2C77 /* fragmentShaderPass.glsl */,
+				8C91802C1922C48400CD2C77 /* fragmentShaderRift.glsl */,
 			);
 			name = Shaders;
 			path = Test3d;
@@ -766,11 +763,10 @@
 				8C9180261922BDB100CD2C77 /* vertexShader.glsl in Resources */,
 				52643C3D191C28380008350D /* InfoPlist.strings in Resources */,
 				52643C4B191C28380008350D /* Images.xcassets in Resources */,
-				8C91802D1922C48400CD2C77 /* fragmentShaderOrig.glsl in Resources */,
-				8C91802F1922C49700CD2C77 /* fragmentShaderAlt.glsl in Resources */,
+				8C91802D1922C48400CD2C77 /* fragmentShaderRift.glsl in Resources */,
 				52C4AFDE191C823B0099C196 /* shrek.mp4 in Resources */,
 				52643C43191C28380008350D /* Credits.rtf in Resources */,
-				8C91802B1922C3B600CD2C77 /* fragmentShader.glsl in Resources */,
+				8C91802B1922C3B600CD2C77 /* fragmentShaderPass.glsl in Resources */,
 				52643C49191C28380008350D /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
