@@ -73,7 +73,7 @@ const int EYE_RIGHT = -1;
         const GLchar* vertexShaderSource = [OpenGLMovieLayer getShaderString:[[NSBundle mainBundle] URLForResource:@"vertexShader" withExtension:@"glsl"]];
         vertexShader = [self compileShader:GL_VERTEX_SHADER withSource:(const GLchar *const *)&vertexShaderSource];
 
-        const GLchar* fragmentShaderSource = [OpenGLMovieLayer getShaderString:[[NSBundle mainBundle] URLForResource:@"fragmentShader" withExtension:@"glsl"]];
+        const GLchar* fragmentShaderSource = [OpenGLMovieLayer getShaderString:[[NSBundle mainBundle] URLForResource:@"fragmentShaderOrig" withExtension:@"glsl"]];
         fragmentShader = [self compileShader:GL_FRAGMENT_SHADER withSource:(const GLchar *const *)&fragmentShaderSource];
 
         prog = glCreateProgram();
@@ -209,10 +209,11 @@ const int EYE_RIGHT = -1;
     GLenum textureName = CVOpenGLTextureGetName(currentFrame);
 
     // Enable target for the current frame
-    glEnable(textureTarget);
+    //    glEnable(textureTarget);
+    glEnable(GL_TEXTURE_2D);
 
     // Set the current texture as the active one
-    glActiveTexture(textureTarget);
+    glActiveTexture(textureTarget-GL_TEXTURE0);
 
     // Bind to the current frame texture
     // This tells OpenGL which texture we are wanting
@@ -221,9 +222,10 @@ const int EYE_RIGHT = -1;
     // to the context.
     glBindTexture(textureTarget, textureName);
 
-    // Set the texture matrix
-    glMatrixMode(GL_TEXTURE);
-    glLoadIdentity();
+//    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//
+//    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureName, 0);
 
     // Set the model view matrix
     glMatrixMode(GL_MODELVIEW);
@@ -237,22 +239,23 @@ const int EYE_RIGHT = -1;
             viewBounds.origin.x + viewBounds.size.width,
             viewBounds.origin.y,
             viewBounds.origin.y + viewBounds.size.height,
-            0, 1.0);
+            -1.0, 1.0);
 
-    // TODO: Fix the texture loading
-    // Currently this renders with a fragment shader
-    // that uses the texture coordinates as red and green
-    // components of the fragment color.
-    // This proves that the shader receives the correct
-    // texture coordinates and the problem is with the
-    // texture sampler we are trying to use
+    // Set the texture matrix
+    glMatrixMode(GL_TEXTURE);
+    glLoadIdentity();
+    glOrtho(frameBounds.origin.x,
+            frameBounds.origin.x + frameBounds.size.width,
+            frameBounds.origin.y,
+            frameBounds.origin.y + frameBounds.size.height,
+            -1.0, 1.0);
 
     // Configure the shader
     glUseProgram(prog);
     [self reportError:@"after use program"];
 
     // Load the texture index in the sampler
-	glUniform1i(textureLoc, textureTarget-GL_TEXTURE0);
+//	glUniform1i(textureLoc, textureTarget-GL_TEXTURE0);
 
     // Render left eye
     [self renderEyeInViewBounds:leftEyeViewBounds
@@ -282,36 +285,48 @@ const int EYE_RIGHT = -1;
     // Get the HMD distortion configuration
     const DistortionConfig & distortion = stereoConfig.GetDistortionConfig();
 
-    // The shader is applied in [0,1] coordinates
-    float w = float(viewBounds.size.width) / float(textureBounds.size.width*2);
-    float h = float(viewBounds.size.height) / float(textureBounds.size.height);
-    float x = float(textureBounds.origin.x) / float(textureBounds.size.width*2);
-    float y = float(textureBounds.origin.y) / float(textureBounds.size.height);
+//    float w = float(viewBounds.size.width) / float(textureBounds.size.width*2);
+//    float h = float(viewBounds.size.height) / float(textureBounds.size.height);
+//    float x = float(textureBounds.origin.x) / float(textureBounds.size.width*2);
+//    float y = float(textureBounds.origin.y) / float(textureBounds.size.height);
+
+    float w = 1.0;
+    float h = 1.0;
+    float x = 0.0;
+    float y = 0.0;
 
     float aspect = stereoConfig.GetAspect();
     float scaleFactor = 1.0f / stereoConfig.GetDistortionScale();
     float eyeOffset = eye * distortion.XCenterOffset;
 
+    float param_x = x + (w + eyeOffset * 0.5f) * 0.5f;
+    float param_y = y + h * 0.5f;
     // Eye center
     glUniform2f(lensCenterLoc,
-                x + (w + eyeOffset * 0.5f) * 0.5f,
-                y + h * 0.5f);
+                param_x,
+                param_y);
 
+    param_x = x + w * 0.5f;
+    param_y = y + h * 0.5f;
     // Screen center
     glUniform2f(screenCenterLoc,
-                x + w * 0.5f,
-                y + h * 0.5f);
+                param_x,
+                param_y);
 
+    param_x = (w / 2.0f) * scaleFactor;
+    param_y = (h / 2) * scaleFactor * aspect;
     // Scale out the distorted sample
     glUniform2f(scaleLoc,
-                (w / 2.0f) * scaleFactor,
-                (h / 2) * scaleFactor * aspect);
+                param_x,
+                param_y);
 
+    param_x = 2.0f / w;
+    param_y = (2.0f / h) / aspect;
     // Scale in the texture coordinates to [-1,1] in order
     // to do the distortion properly
     glUniform2f(scaleInLoc,
-                2.0f / w,
-                (2.0f / h) / aspect);
+                param_x,
+                param_y);
 
     // Static array of distortion coefficients for the barrel transform function
     glUniform4fv(hmdWarpParamLoc, 1, distortion.K);
@@ -321,6 +336,7 @@ const int EYE_RIGHT = -1;
 
     // Upper left texture
     glTexCoord2f(textureBounds.origin.x,
+//    glTexCoord2f(0, //textureBounds.origin.x,
                  textureBounds.origin.y);
     // Lower left viewport
     glVertex2f  (viewBounds.origin.x,
@@ -328,6 +344,7 @@ const int EYE_RIGHT = -1;
 
     // Upper right texture
     glTexCoord2f(textureBounds.origin.x + textureBounds.size.width,
+//    glTexCoord2f(0 /*textureBounds.origin.x*/ + textureBounds.size.width,
                  textureBounds.origin.y);
     // Lower right viewport
     glVertex2f  (viewBounds.origin.x + viewBounds.size.width,
@@ -335,6 +352,7 @@ const int EYE_RIGHT = -1;
 
     // Lower right texture
     glTexCoord2f(textureBounds.origin.x + textureBounds.size.width,
+//    glTexCoord2f(0 /*textureBounds.origin.x*/ + textureBounds.size.width,
                  textureBounds.origin.y + textureBounds.size.height);
     // Upper right viewport
     glVertex2f  (viewBounds.origin.x + viewBounds.size.width,
@@ -342,6 +360,7 @@ const int EYE_RIGHT = -1;
 
     // Lower left texture
     glTexCoord2f(textureBounds.origin.x,
+//    glTexCoord2f(0, //textureBounds.origin.x,
                  textureBounds.origin.y + textureBounds.size.height);
     // Upper left viewport
     glVertex2f  (viewBounds.origin.x,
