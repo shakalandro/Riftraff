@@ -1,7 +1,7 @@
 #version 150
 in vec4 vertexColor;
 out vec4 fragColor;
-uniform sampler2D tex;
+uniform sampler2DRect tex;
 uniform vec2 LensCenter;
 uniform vec2 ScreenCenter;
 uniform vec2 Scale;

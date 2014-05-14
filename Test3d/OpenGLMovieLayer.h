@@ -36,7 +36,11 @@ using namespace OVR::Util::Render;
 
     // Vertices array and buffer
     GLuint                  vertexArray;
+    GLuint                  vertexArrayLeft;
+    GLuint                  vertexArrayRight;
     GLuint                  vertexBuffer;
+    GLuint                  vertexBufferLeft;
+    GLuint                  vertexBufferRight;
 
     // Device info
     HMDInfo                 hmdInfo;

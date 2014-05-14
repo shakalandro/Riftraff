@@ -200,7 +200,47 @@ const int EYE_RIGHT = -1;
     [self reportError:@"after glBindBuffer"];
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     [self reportError:@"after glBufferData"];
+    
+    // Setup the left eye vertex array
+    glGenVertexArrays(1, &vertexArrayLeft);
+    [self reportError:@"after glGenVertexArrays"];
+    glBindVertexArray(vertexArrayLeft);
+    [self reportError:@"after glBindVertexArray"];
 
+    // Setup the vertex buffer
+    GLfloat verticesLeft[] = {
+        -1.0f, -1.0f,
+        0.0f, -1.0f,
+        0.0f,  0.0f,
+        -1.0f,  0.0f
+    };
+    glGenBuffers(1, &vertexBufferLeft);
+    [self reportError:@"after glGenBuffers"];
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferLeft);
+    [self reportError:@"after glBindBuffer"];
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesLeft), verticesLeft, GL_STATIC_DRAW);
+    [self reportError:@"after glBufferData"];
+    
+    // Setup the vertex array
+    glGenVertexArrays(1, &vertexArray);
+    [self reportError:@"after glGenVertexArrays"];
+    glBindVertexArray(vertexArray);
+    [self reportError:@"after glBindVertexArray"];
+
+    // Setup the vertex buffer
+    GLfloat verticesRight[] = {
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f,  1.0f,
+        0.0f,  1.0f
+    };
+    glGenBuffers(1, &vertexBufferRight);
+    [self reportError:@"after glGenBuffers"];
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferRight);
+    [self reportError:@"after glBindBuffer"];
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesRight), verticesRight, GL_STATIC_DRAW);
+    [self reportError:@"after glBufferData"];
+    
     positionLoc = glGetAttribLocation(prog, "inPosition");
     [self reportError:@"after glGetAttribLocation(inPosition)"];
     glEnableVertexAttribArray(positionLoc);
