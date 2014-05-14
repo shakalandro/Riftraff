@@ -11,20 +11,22 @@ using namespace OVR;
 using namespace OVR::Util::Render;
 
 @interface OpenGLMovieLayer : CAOpenGLLayer {
+    // AV Player, cache and texture
     AVPlayer                *movie;
     AVPlayerItemVideoOutput *output;
-    CVOpenGLTextureRef		currentFrame;
     CVOpenGLTextureCacheRef textureCache;
+    CVOpenGLTextureRef		currentFrame;
 
-    // Self coordinates of the frame
-    CGRect                  frameBounds;
-    CGRect                  leftEyeFrameBounds;
-    CGRect                  rightEyeFrameBounds;
-
+    // Shaders program
     GLuint                  vertexShader;
     GLuint                  fragmentShader;
     GLuint                  prog;
 
+    // Vertex shader attributes
+    GLuint                  positionLoc;
+    GLuint                  colorLoc;
+
+    // Uniforms
     GLint                   textureLoc;
     GLint                   lensCenterLoc;
     GLint                   screenCenterLoc;
@@ -32,8 +34,19 @@ using namespace OVR::Util::Render;
     GLint                   scaleInLoc;
     GLint                   hmdWarpParamLoc;
 
+    // Vertices array and buffer
+    GLuint                  vertexArray;
+    GLuint                  vertexBuffer;
+
+    // Device info
     HMDInfo                 hmdInfo;
     StereoConfig            stereoConfig;
+
+    // Self coordinates of the frame
+    CGRect                  frameBounds;
+    CGRect                  leftEyeFrameBounds;
+    CGRect                  rightEyeFrameBounds;
+
 }
 
 @property (retain) AVPlayer *movie;
