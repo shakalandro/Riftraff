@@ -1,7 +1,7 @@
 #import "OpenGLMovieLayer.h"
-#import <OpenGL/gl.h>
 #import <CoreVideo/CVPixelBuffer.h>
 #import <CoreVideo/CVOpenGLTextureCache.h>
+#import <OpenGL/gl3.h>
 
 @implementation OpenGLMovieLayer
 
@@ -83,7 +83,7 @@ const int EYE_RIGHT = -1;
         const GLchar* vertexShaderSource = [OpenGLMovieLayer getShaderString:[[NSBundle mainBundle] URLForResource:@"vertexShader" withExtension:@"glsl"]];
         vertexShader = [self compileShader:GL_VERTEX_SHADER withSource:(const GLchar *const *)&vertexShaderSource];
 
-        const GLchar* fragmentShaderSource = [OpenGLMovieLayer getShaderString:[[NSBundle mainBundle] URLForResource:@"fragmentShaderPass" withExtension:@"glsl"]];
+        const GLchar* fragmentShaderSource = [OpenGLMovieLayer getShaderString:[[NSBundle mainBundle] URLForResource:@"fragmentShaderRift" withExtension:@"glsl"]];
         fragmentShader = [self compileShader:GL_FRAGMENT_SHADER withSource:(const GLchar *const *)&fragmentShaderSource];
 
         prog = glCreateProgram();
@@ -107,17 +107,27 @@ const int EYE_RIGHT = -1;
             GLchar log[400];
             glGetProgramInfoLog(prog, 400, & len, log);
             glDeleteProgram(prog);
+            glDeleteShader(vertexShader);
+            glDeleteShader(fragmentShader);
         }
 
+        [self setupVbo];
+
         textureLoc = glGetUniformLocation(prog, "texture");
+        [self reportError:@"after glGetUniformLocation(texture)"];
         lensCenterLoc = glGetUniformLocation(prog, "LensCenter");
+        [self reportError:@"after glGetUniformLocation(LensCenter)"];
         screenCenterLoc = glGetUniformLocation(prog, "ScreenCenter");
+        [self reportError:@"after glGetUniformLocation(ScreenCenter)"];
         scaleLoc = glGetUniformLocation(prog, "Scale");
+        [self reportError:@"after glGetUniformLocation(Scale)"];
         scaleInLoc = glGetUniformLocation(prog, "ScaleIn");
+        [self reportError:@"after glGetUniformLocation(ScaleIn)"];
         hmdWarpParamLoc = glGetUniformLocation(prog, "HmdWarpParam");
 
         NSLog(@"OpenGL Version: %s", glGetString(GL_VERSION));
         NSLog(@"OpenGL Shader Version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+        [self reportError:@"after glGetUniformLocation(HmdWarpParam)"];
     }
 
     if (!textureCache) {
@@ -169,6 +179,43 @@ const int EYE_RIGHT = -1;
     return NO;
 }
 
+- (void) setupVbo
+{
+    // Setup the vertex array
+    glGenVertexArrays(1, &vertexArray);
+    [self reportError:@"after glGenVertexArrays"];
+    glBindVertexArray(vertexArray);
+    [self reportError:@"after glBindVertexArray"];
+
+    // Setup the vertex buffer
+    GLfloat vertices[] = {
+        -1.0f, -1.0f,
+        1.0f, -1.0f,
+        1.0f,  1.0f,
+        -1.0f,  1.0f
+    };
+    glGenBuffers(1, &vertexBuffer);
+    [self reportError:@"after glGenBuffers"];
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    [self reportError:@"after glBindBuffer"];
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    [self reportError:@"after glBufferData"];
+
+    positionLoc = glGetAttribLocation(prog, "inPosition");
+    [self reportError:@"after glGetAttribLocation(inPosition)"];
+    glEnableVertexAttribArray(positionLoc);
+    [self reportError:@"after glEnableVertexAttribArray(inPosition)"];
+    glVertexAttribPointer(positionLoc, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    [self reportError:@"after glVertexAttribPointer(inPosition)"];
+
+    colorLoc = glGetAttribLocation(prog, "inColor");
+    [self reportError:@"after glGetAttribLocation(inColor)"];
+    glEnableVertexAttribArray(colorLoc);
+    [self reportError:@"after glEnableVertexAttribArray(inColor)"];
+    glVertexAttribPointer(colorLoc, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    [self reportError:@"after glVertexAttribPointer(inColor)"];
+}
+
 - (void)setupVisualContext:(CGLContextObj)glContext
            withPixelFormat:(CGLPixelFormatObj)pixelFormat;
 {
@@ -180,7 +227,8 @@ const int EYE_RIGHT = -1;
     [[[self movie] currentItem] addOutput:output];
 }
 
-- (GLuint)compileShader:(GLenum)type withSource:(const GLchar *const *)shaderSrc
+- (GLuint)compileShader:(GLenum)type
+             withSource:(const GLchar *const *)shaderSrc
 {
     GLuint shader = glCreateShader(type);
     glShaderSource(shader, 1, shaderSrc, NULL);
@@ -204,6 +252,8 @@ const int EYE_RIGHT = -1;
             forLayerTime:(CFTimeInterval)interval 
              displayTime:(const CVTimeStamp *)timeStamp
 {
+    CGLSetCurrentContext(glContext);
+
     // Self coordinates of the view
     CGRect viewBounds = [self bounds];
     NSLog(@"%f, %f", viewBounds.size.width, viewBounds.size.height);
@@ -224,19 +274,19 @@ const int EYE_RIGHT = -1;
     GLenum textureName = CVOpenGLTextureGetName(currentFrame);
 
     // Set unit 0 as the active target unit
-    glActiveTexture(0);
+    glActiveTexture(GL_TEXTURE0);
     [self reportError:@"after active texture"];
 
     // Enable the texture target for the current frame
-    glEnable(textureTarget);
-    [self reportError:@"after enable"];
+    //glEnable(GL_TEXTURE);
+    //[self reportError:@"after enable"];
 
     // Bind to the current frame texture
     // This tells OpenGL which texture we are wanting
     // to draw so that when we make our glTexCord and
     // glVertex calls, our current frame gets drawn
     // to the context.
-    glBindTexture(textureTarget, textureName);
+    glBindTexture(GL_TEXTURE_RECTANGLE, textureName);
     [self reportError:@"after bind texture"];
 
 //    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -246,17 +296,17 @@ const int EYE_RIGHT = -1;
 //    [self reportError:@"after frame buffer texture"];
 
     // Set the model view matrix
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+//    glMatrixMode(GL_MODELVIEW);
+//    glLoadIdentity();
 
     // Set the projection view matrix
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(viewBounds.origin.x,
-            viewBounds.origin.x + viewBounds.size.width,
-            viewBounds.origin.y,
-            viewBounds.origin.y + viewBounds.size.height,
-            -1.0, 1.0);
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
+//    glOrtho(viewBounds.origin.x,
+//            viewBounds.origin.x + viewBounds.size.width,
+//            viewBounds.origin.y,
+//            viewBounds.origin.y + viewBounds.size.height,
+//            -1.0, 1.0);
 
     // Configure the shader
     glUseProgram(prog);
@@ -290,15 +340,6 @@ const int EYE_RIGHT = -1;
         withTextureBounds:(struct CGRect)textureBounds
         forEye:(int)eye
 {
-    // Set the texture matrix
-    glMatrixMode(GL_TEXTURE);
-    glLoadIdentity();
-    glOrtho(textureBounds.origin.x,
-            textureBounds.origin.x + textureBounds.size.width,
-            textureBounds.origin.y,
-            textureBounds.origin.y + textureBounds.size.height,
-            -1.0, 1.0);
-
 //    float w = float(viewBounds.size.width) / float(textureBounds.size.width*2);
 //    float h = float(viewBounds.size.height) / float(textureBounds.size.height);
 //    float x = float(textureBounds.origin.x) / float(textureBounds.size.width*2);
@@ -345,45 +386,18 @@ const int EYE_RIGHT = -1;
     // Static array of distortion coefficients for the barrel transform function
     glUniform4fv(hmdWarpParamLoc, 1, stereoConfig.GetDistortionConfig().K);
 
-    // Render the eye quads
-    glBegin(GL_QUADS);
-
-    // Upper left texture
-    glTexCoord2f(textureBounds.origin.x,
-                 textureBounds.origin.y);
-    // Lower left viewport
-    glVertex2f  (viewBounds.origin.x,
-                 viewBounds.origin.y + viewBounds.size.height);
-
-    // Upper right texture
-    glTexCoord2f(textureBounds.origin.x + textureBounds.size.width,
-                 textureBounds.origin.y);
-    // Lower right viewport
-    glVertex2f  (viewBounds.origin.x + viewBounds.size.width,
-                 viewBounds.origin.y + viewBounds.size.height);
-
-    // Lower right texture
-    glTexCoord2f(textureBounds.origin.x + textureBounds.size.width,
-                 textureBounds.origin.y + textureBounds.size.height);
-    // Upper right viewport
-    glVertex2f  (viewBounds.origin.x + viewBounds.size.width,
-                 viewBounds.origin.y);
-
-    // Lower left texture
-    glTexCoord2f(textureBounds.origin.x,
-                 textureBounds.origin.y + textureBounds.size.height);
-    // Upper left viewport
-    glVertex2f  (viewBounds.origin.x,
-                 viewBounds.origin.y);
-
-    glEnd();
-    [self reportError:@"after glEnd"];
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    [self reportError:@"after glDrawArrays"];
 }
 
 - (void)reportError:(NSString*)message
 {
     GLenum error = glGetError();
     if (error != GL_NO_ERROR) {
+        GLsizei len;
+        GLchar log[2000];
+        glGetProgramInfoLog(prog, 2000, &len, log);
+        glGetShaderInfoLog(fragmentShader, 2000, &len, log);
         switch (error) {
             case GL_INVALID_ENUM:
                 NSLog ( @"GL error occurred: %u GL_INVALID_ENUM, %@",  error , message);
@@ -407,6 +421,34 @@ const int EYE_RIGHT = -1;
     }
 }
 
+-(CGLPixelFormatObj)copyCGLPixelFormatForDisplayMask:(uint32_t)mask
+{
+	// The default is fine for this demonstration.
+    //	return [super copyCGLPixelFormatForDisplayMask:mask];
+
+    CGLPixelFormatAttribute attributes[13] = {
+        // This sets the context to 3.2
+        kCGLPFAOpenGLProfile, (CGLPixelFormatAttribute)kCGLOGLPVersion_3_2_Core,
+        kCGLPFAColorSize,     (CGLPixelFormatAttribute)24,
+        kCGLPFAAlphaSize,     (CGLPixelFormatAttribute)8,
+//        kCGLPFAAccelerated,
+//        kCGLPFADoubleBuffer,
+//        kCGLPFASampleBuffers, (CGLPixelFormatAttribute)1,
+//        kCGLPFASamples,       (CGLPixelFormatAttribute)4,
+        (CGLPixelFormatAttribute)0
+    };
+
+	CGLPixelFormatObj pixelFormatObj = NULL;
+	GLint numPixelFormats = 0;
+
+	CGLChoosePixelFormat(attributes, &pixelFormatObj, &numPixelFormats);
+
+	if(pixelFormatObj == NULL)
+		NSLog(@"Error: Could not choose pixel format!");
+
+	return pixelFormatObj;
+}
+
 - (CGLContextObj)copyCGLContextForPixelFormat:(CGLPixelFormatObj)pixelFormat;
 {
     CVOpenGLTextureRelease(currentFrame);
@@ -420,7 +462,7 @@ const int EYE_RIGHT = -1;
 
     CGLContextObj context = [super copyCGLContextForPixelFormat:pixelFormat];
 
-	return context;
+    return context;
 }
 
 - (void) dealloc

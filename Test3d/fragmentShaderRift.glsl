@@ -1,12 +1,12 @@
-uniform sampler2D texture;
+#version 150
+in vec4 vertexColor;
+out vec4 fragColor;
+uniform sampler2D tex;
 uniform vec2 LensCenter;
 uniform vec2 ScreenCenter;
 uniform vec2 Scale;
 uniform vec2 ScaleIn;
 uniform vec4 HmdWarpParam;
-varying float xpos;
-varying float ypos;
-// Scales input texture coordinates for distortion.
 vec2 HmdWarp(vec2 in01)
 {
     vec2 theta = (in01 - LensCenter * ScaleIn);
@@ -21,15 +21,15 @@ vec2 HmdWarp(vec2 in01)
 }
 void main(void)
 {
-    vec2 tc = HmdWarp(vec2(xpos-LensCenter.x, ypos));
+    vec2 tc = HmdWarp(vec2(vertexColor.x-LensCenter.x, vertexColor.y));
 
-    gl_FragColor = vec4(abs(tc.x), abs(tc.y), 0.0, 1.0);
+    fragColor = vec4(abs(tc.x), abs(tc.y), 0.0, 1.0);
     if (((abs(tc.x) > 0.40) && (abs(tc.x) < 0.50)) ||
         ((abs(tc.y) > 0.40) && (abs(tc.y) < 0.50))) {
-        gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+        fragColor = vec4(0.0, 0.0, 1.0, 1.0);
     }
     // Render the texture pixel from the distorted coords
-    // gl_FragColor = texture2d(texture, tc);
+    // fragColor = texture(tex, tc);
     if (any(notEqual(clamp(tc,
                            ScreenCenter-vec2(0.5,0.5),
                            ScreenCenter+vec2(0.5,0.5)
@@ -40,6 +40,6 @@ void main(void)
        )
     {
         // Render a black pixel
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        fragColor = vec4(0.0, 0.0, 0.0, 1.0);
     }
 }
