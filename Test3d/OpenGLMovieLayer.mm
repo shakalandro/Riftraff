@@ -211,8 +211,8 @@ const int EYE_RIGHT = -1;
     GLfloat verticesLeft[] = {
         -1.0f, -1.0f,
         0.0f, -1.0f,
-        0.0f,  0.0f,
-        -1.0f,  0.0f
+        0.0f,  1.0f,
+        -1.0f,  1.0f
     };
     glGenBuffers(1, &vertexBufferLeft);
     [self reportError:@"after glGenBuffers"];
@@ -229,8 +229,8 @@ const int EYE_RIGHT = -1;
 
     // Setup the vertex buffer
     GLfloat verticesRight[] = {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
+        0.0f, -1.0f,
+        1.0f, -1.0f,
         1.0f,  1.0f,
         0.0f,  1.0f
     };
@@ -310,7 +310,7 @@ const int EYE_RIGHT = -1;
     glClear(GL_COLOR_BUFFER_BIT);
 
     // default target for CoreVideo textures is GL_TEXTURE_RECTANGLE_EXT
-    GLenum textureTarget = CVOpenGLTextureGetTarget(currentFrame);
+    //GLenum textureTarget = CVOpenGLTextureGetTarget(currentFrame);
     GLenum textureName = CVOpenGLTextureGetName(currentFrame);
 
     // Set unit 0 as the active target unit
@@ -353,7 +353,7 @@ const int EYE_RIGHT = -1;
     [self reportError:@"after use program"];
 
     // Load the texture index in the sampler
-	glUniform1i(textureLoc, 0);
+    glUniform1i(textureLoc, 0);
 
     // Render left eye
     [self renderEyeInViewBounds:leftEyeViewBounds
