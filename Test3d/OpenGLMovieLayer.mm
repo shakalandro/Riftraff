@@ -115,6 +115,9 @@ const int EYE_RIGHT = -1;
         scaleLoc = glGetUniformLocation(prog, "Scale");
         scaleInLoc = glGetUniformLocation(prog, "ScaleIn");
         hmdWarpParamLoc = glGetUniformLocation(prog, "HmdWarpParam");
+
+        NSLog(@"OpenGL Version: %s", glGetString(GL_VERSION));
+        NSLog(@"OpenGL Shader Version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
     }
 
     if (!textureCache) {
