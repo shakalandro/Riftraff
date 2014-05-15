@@ -122,8 +122,15 @@ const int EYE_RIGHT = -1;
     [[[self movie] currentItem] addOutput:output];
 }
 
-- (void) setupVertexArray:(GLuint *)vertexArray withVertextBuffer:(GLuint *)vertexBuffer forEye:(int)eye
+- (void) setupVertexArray:(GLuint *)vertexArray
+                   forEye:(int)eye
 {
+    // Setup the vertex array
+    glGenVertexArrays(1, vertexArray);
+    [self reportError:@"glGenVertexArrays"];
+    glBindVertexArray(*vertexArray);
+    [self reportError:@"glBindVertexArray"];
+
     float leftX = (-1.0f + eye) / 2;
     float rightX = (1.0f + eye) / 2;
 
@@ -135,27 +142,36 @@ const int EYE_RIGHT = -1;
         rightX,  1.0f
     };
 
-    // Setup the vertex array
-    glGenVertexArrays(1, vertexArray);
-    [self reportError:@"glGenVertexArrays"];
-    glBindVertexArray(*vertexArray);
-    [self reportError:@"glBindVertexArray"];
+    GLuint vertexBuffer;
 
-    glGenBuffers(1, vertexBuffer);
+    glGenBuffers(1, &vertexBuffer);
     [self reportError:@"glGenBuffers"];
-    glBindBuffer(GL_ARRAY_BUFFER, *vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     [self reportError:@"glBindBuffer"];
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     [self reportError:@"glBufferData"];
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    glEnableVertexAttribArray(vertexPositionLoc);
+    [self reportError:@"glEnableVertexAttribArray(vertexPosition)"];
+    glVertexAttribPointer(vertexPositionLoc, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    [self reportError:@"glVertexAttribPointer(vertexPosition)"];
+    glEnableVertexAttribArray(texturePositionLoc);
+    [self reportError:@"glEnableVertexAttribArray(texturePosition)"];
+    glVertexAttribPointer(texturePositionLoc, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    [self reportError:@"glVertexAttribPointer(texturePosition)"];
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+
+    glDeleteBuffers(1, &vertexBuffer);
 }
 
 - (void) setupVertexArraysAndBuffers
 {
-    [self setupVertexArray:&vertexArrayLeft withVertextBuffer:&vertexBufferLeft forEye:0-(EYE_LEFT)];
-    [self setupVertexArray:&vertexArrayRight withVertextBuffer:&vertexBufferRight forEye:0-(EYE_RIGHT)];
+    [self setupVertexArray:&vertexArrayLeft
+                    forEye:0-(EYE_LEFT)];
+    [self setupVertexArray:&vertexArrayRight
+                    forEye:0-(EYE_RIGHT)];
 }
 
 - (void)releaseCGLContext:(CGLContextObj)glContext
@@ -167,9 +183,6 @@ const int EYE_RIGHT = -1;
 
 - (void) cleanup
 {
-    glDeleteBuffers(1, &vertexBufferRight);
-    glDeleteBuffers(1, &vertexBufferLeft);
-
     glDeleteVertexArrays(1, &vertexArrayRight);
     glDeleteVertexArrays(1, &vertexArrayLeft);
 
@@ -274,9 +287,6 @@ const int EYE_RIGHT = -1;
         GLsizei len;
         GLchar log[400];
         glGetProgramInfoLog(prog, 400, & len, log);
-        glDeleteProgram(prog);
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
     }
 
     [self getAttributesLocations];
@@ -285,7 +295,7 @@ const int EYE_RIGHT = -1;
 
     // Use the shader program
     glUseProgram(prog);
-    [self reportError:@"after use program"];
+    [self reportError:@"glUseProgram"];
 }
 
 #pragma mark
@@ -307,9 +317,9 @@ const int EYE_RIGHT = -1;
 
         CVOpenGLTextureCacheCreate(kCFAllocatorDefault, NULL, glContext, pixelFormat, NULL, &textureCache);
 
-        [self setupVertexArraysAndBuffers];
-
         [self createProgram];
+
+        [self setupVertexArraysAndBuffers];
 
         initialized = true;
     }
@@ -403,27 +413,16 @@ const int EYE_RIGHT = -1;
     glUniform1i(textureLoc, 2);
     [self reportError:@"glUniform1i(textureLoc)"];
 
-    glBindVertexArray(vertexArrayLeft);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferLeft);
-
     // Render left eye
     [self renderEyeInViewBounds:leftEyeViewBounds
               withTextureBounds:leftEyeFrameBounds
                  andVertexArray:vertexArrayLeft
-                andVertexBuffer:vertexBufferLeft
                          forEye:EYE_LEFT];
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-    glBindVertexArray(vertexArrayRight);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferRight);
 
     // Render right eye
     [self renderEyeInViewBounds:rightEyeViewBounds
               withTextureBounds:rightEyeFrameBounds
                  andVertexArray:vertexArrayRight
-                andVertexBuffer:vertexBufferRight
                          forEye:EYE_RIGHT];
 
     // This CAOpenGLLayer is responsible to flush
@@ -437,20 +436,10 @@ const int EYE_RIGHT = -1;
 - (void)renderEyeInViewBounds:(struct CGRect)viewBounds
             withTextureBounds:(struct CGRect)textureBounds
                andVertexArray:(GLuint)vertexArray
-              andVertexBuffer:(GLuint)vertexBuffer
                        forEye:(int)eye
 {
     glBindVertexArray(vertexArray);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-
-    glEnableVertexAttribArray(vertexPositionLoc);
-    [self reportError:@"glEnableVertexAttribArray(vertexPosition)"];
-    glVertexAttribPointer(vertexPositionLoc, 2, GL_FLOAT, GL_FALSE, 0, 0);
-    [self reportError:@"glVertexAttribPointer(vertexPosition)"];
-    glEnableVertexAttribArray(texturePositionLoc);
-    [self reportError:@"glEnableVertexAttribArray(texturePosition)"];
-    glVertexAttribPointer(texturePositionLoc, 2, GL_FLOAT, GL_FALSE, 0, 0);
-    [self reportError:@"glVertexAttribPointer(texturePosition)"];
+    [self reportError:@"glBindVertexArray"];
 
 //    float w = float(viewBounds.size.width) / float(textureBounds.size.width*2);
 //    float h = float(viewBounds.size.height) / float(textureBounds.size.height);
@@ -501,7 +490,6 @@ const int EYE_RIGHT = -1;
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     [self reportError:@"glDrawArrays"];
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
 
