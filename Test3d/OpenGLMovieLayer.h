@@ -23,8 +23,8 @@ using namespace OVR::Util::Render;
     GLuint                  prog;
 
     // Vertex shader attributes
-    GLuint                  positionLoc;
-    GLuint                  colorLoc;
+    GLuint                  vertexPositionLoc;
+    GLuint                  texturePositionLoc;
 
     // Uniforms
     GLint                   textureLoc;
@@ -35,10 +35,8 @@ using namespace OVR::Util::Render;
     GLint                   hmdWarpParamLoc;
 
     // Vertices array and buffer
-    GLuint                  vertexArray;
     GLuint                  vertexArrayLeft;
     GLuint                  vertexArrayRight;
-    GLuint                  vertexBuffer;
     GLuint                  vertexBufferLeft;
     GLuint                  vertexBufferRight;
 
@@ -51,13 +49,13 @@ using namespace OVR::Util::Render;
     CGRect                  leftEyeFrameBounds;
     CGRect                  rightEyeFrameBounds;
 
+    BOOL                    initialized;
+
 }
 
 @property (retain) AVPlayer *movie;
 @property (retain) AVPlayerItemVideoOutput *output;
 
 - (id)initWithMovie:(AVPlayer*)m;
-- (void)setupVisualContext:(CGLContextObj)glContext withPixelFormat:(CGLPixelFormatObj)pixelFormat;
-+ (GLchar*)getShaderString:(NSURL*)fromURL;
 
 @end

@@ -1,5 +1,5 @@
 #version 150
-in vec4 vertexColor;
+in vec4 position;
 out vec4 fragColor;
 uniform sampler2DRect tex;
 uniform vec2 LensCenter;
@@ -21,7 +21,7 @@ vec2 HmdWarp(vec2 in01)
 }
 void main(void)
 {
-    vec2 tc = HmdWarp(vec2(vertexColor.x-LensCenter.x, vertexColor.y));
+    vec2 tc = HmdWarp(vec2(position.x-LensCenter.x, position.y));
 
     fragColor = vec4(abs(tc.x), abs(tc.y), 0.0, 1.0);
     if (((abs(tc.x) > 0.40) && (abs(tc.x) < 0.50)) ||
