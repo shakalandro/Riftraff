@@ -58,7 +58,7 @@ const int EYE_RIGHT = -1;
     hmdInfo.DesktopY = 0;
 
     Ptr<DeviceManager> pManager;
-    Ptr<HMDDevice>     pHMD;
+    Ptr<HMDDevice> pHMD;
     pManager = *DeviceManager::Create();
     pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
     if (pHMD != NULL) {
@@ -134,29 +134,45 @@ const int EYE_RIGHT = -1;
     glBindVertexArray(*vertexArray);
     [self reportError:@"glBindVertexArray"];
 
-    float leftX = (-1.0f + eye) / 2;
-    float rightX = (1.0f + eye) / 2;
+    // eye is 1|-1
+    // eyeVert is -1|1
+    // eyeTex is 0|0.5
+    float vertEye = -1.0f * eye;
+    float eyeTex = (vertEye + 1.0f) / 4.0f;
 
-//    float leftTexX = (-1.0f + eye) / 2;
-//    float rightTexX = (1.0f + eye) / 2;
+    //
+    float leftVertX = (-1.0f + vertEye) / 2;
+    float rightVertX = (1.0f + vertEye) / 2;
+    float topVertY = 1.0f;
+    float bottomVertY = -1.0f;
+
+    float leftTexX = (leftVertX + 1) / 2;
+    float rightTexX = (rightVertX + 1) / 2;
+    float topTexY = ((-1.0f * topVertY) + 1) / 2;
+    float bottomTexY = ((-1.0f * bottomVertY) + 1) / 2;
+
+    float leftWarpX = (leftTexX - eyeTex) * 4.0f - 1.0f;
+    float rightWarpX = (rightTexX - eyeTex) *4.0f - 1.0f;
+    float topWarpY = topTexY * 2.0f - 1.0f;
+    float bottomWarpY = bottomTexY * 2.0f - 1.0f;
 
     // Setup the left vertex buffer
     // Use absolute texture coordinates and texelFetch() for the GL_TEXTURE_RECTANGLE
     // as normalized ([0,1]) coordinates and texture() don't sample properly
     // for some reason
     GLfloat vertices[] = {
-        leftX, -1.0f,
-        rightX, -1.0f,
-        leftX,  1.0f,
-        rightX,  1.0f,
-        (GLfloat)textureBounds.origin.x,
-        (GLfloat)textureBounds.origin.y + (GLfloat)textureBounds.size.height,
-        (GLfloat)textureBounds.origin.x + (GLfloat)textureBounds.size.width,
-        (GLfloat)textureBounds.origin.y + (GLfloat)textureBounds.size.height,
+        leftVertX,  topVertY,
+        rightVertX,  topVertY,
+        leftVertX, bottomVertY,
+        rightVertX, bottomVertY,
         (GLfloat)textureBounds.origin.x,
         (GLfloat)textureBounds.origin.y,
         (GLfloat)textureBounds.origin.x + (GLfloat)textureBounds.size.width,
         (GLfloat)textureBounds.origin.y,
+        (GLfloat)textureBounds.origin.x,
+        (GLfloat)textureBounds.origin.y + (GLfloat)textureBounds.size.height,
+        (GLfloat)textureBounds.origin.x + (GLfloat)textureBounds.size.width,
+        (GLfloat)textureBounds.origin.y + (GLfloat)textureBounds.size.height,
     };
 
     GLuint vertexBuffer;
@@ -187,12 +203,12 @@ const int EYE_RIGHT = -1;
 {
     if (!vertexArrayLeft) {
         [self setupVertexArray:&vertexArrayLeft
-                        forEye:0-(EYE_LEFT)
+                        forEye:EYE_LEFT)
                withTextureRect:frameBoundsLeft];
     }
     if (!vertexArrayRight) {
         [self setupVertexArray:&vertexArrayRight
-                        forEye:0-(EYE_RIGHT)
+                        forEye:EYE_RIGHT)
                withTextureRect:frameBoundsRight];
     }
 }
@@ -493,18 +509,18 @@ const int EYE_RIGHT = -1;
                 param_x,
                 param_y);
 
+    param_x = 2.0f / w;
+    param_y = (2.0f / h) / aspect;
+    // Scale in the texture coordinates [] to [-1,1] in order
+    // to do the distortion properly
+    glUniform2f(scaleInLoc,
+                param_x,
+                param_y);
+
     param_x = (w / 2.0f) * scaleFactor;
     param_y = (h / 2) * scaleFactor * aspect;
     // Scale out the distorted sample
     glUniform2f(scaleLoc,
-                param_x,
-                param_y);
-
-    param_x = 2.0f / w;
-    param_y = (2.0f / h) / aspect;
-    // Scale in the texture coordinates to [-1,1] in order
-    // to do the distortion properly
-    glUniform2f(scaleInLoc,
                 param_x,
                 param_y);
 
