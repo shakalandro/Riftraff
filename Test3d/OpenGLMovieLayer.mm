@@ -137,7 +137,13 @@ const int EYE_RIGHT = -1;
     float leftX = (-1.0f + eye) / 2;
     float rightX = (1.0f + eye) / 2;
 
+//    float leftTexX = (-1.0f + eye) / 2;
+//    float rightTexX = (1.0f + eye) / 2;
+
     // Setup the left vertex buffer
+    // Use absolute texture coordinates and texelFetch() for the GL_TEXTURE_RECTANGLE
+    // as normalized ([0,1]) coordinates and texture() don't sample properly
+    // for some reason
     GLfloat vertices[] = {
         leftX, -1.0f,
         rightX, -1.0f,
@@ -375,12 +381,12 @@ const int EYE_RIGHT = -1;
                                      lowerRight[0] - upperLeft[0],
                                      lowerRight[1] - upperLeft[1]);
             frameBoundsLeft = CGRectMake(frameBounds.origin.x,
-                                            frameBounds.origin.y,
-                                            frameBounds.size.width/2,
-                                            frameBounds.size.height);
+                                         frameBounds.origin.y,
+                                         frameBounds.size.width/2,
+                                         frameBounds.size.height);
             frameBoundsRight = CGRectOffset(frameBoundsLeft,
-                                               frameBoundsLeft.size.width,
-                                               0);
+                                            frameBoundsLeft.size.width,
+                                            0);
 
             // Setup the vertex arrays here because we need the texture size
             [self setupVertexArrays];
@@ -401,13 +407,13 @@ const int EYE_RIGHT = -1;
 
     // Self coordinates of the view
     CGRect viewBounds = [self bounds];
-    CGRect leftEyeViewBounds = CGRectMake(viewBounds.origin.x,
-                                          viewBounds.origin.y,
-                                          viewBounds.size.width/2,
-                                          viewBounds.size.height);
-    CGRect rightEyeViewBounds = CGRectOffset(leftEyeViewBounds,
-                                            leftEyeViewBounds.size.width,
-                                            0);
+    CGRect viewBoundsLeft = CGRectMake(viewBounds.origin.x,
+                                       viewBounds.origin.y,
+                                       viewBounds.size.width/2,
+                                       viewBounds.size.height);
+    CGRect viewBoundsRight = CGRectOffset(viewBoundsLeft,
+                                          viewBoundsLeft.size.width,
+                                          0);
 
     // Clear the buffer
     glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -432,13 +438,13 @@ const int EYE_RIGHT = -1;
     [self reportError:@"glUniform1i(textureLoc)"];
 
     // Render left eye
-    [self renderEyeInViewBounds:leftEyeViewBounds
+    [self renderEyeInViewBounds:viewBoundsLeft
               withTextureBounds:frameBoundsLeft
                  andVertexArray:vertexArrayLeft
                          forEye:EYE_LEFT];
 
     // Render right eye
-    [self renderEyeInViewBounds:rightEyeViewBounds
+    [self renderEyeInViewBounds:viewBoundsRight
               withTextureBounds:frameBoundsRight
                  andVertexArray:vertexArrayRight
                          forEye:EYE_RIGHT];
