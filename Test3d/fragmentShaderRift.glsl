@@ -22,7 +22,7 @@ vec2 HmdWarp(vec2 in01)
 }
 void main(void)
 {
-    vec2 tc = HmdWarp(texPosition.xy);
+    vec2 tc = HmdWarp(texPosition.xy / textureSize(tex));
 
     fragColor = vec4(abs(tc.x), abs(tc.y), 0.0, 1.0);
     if (((abs(tc.x) > 0.40) && (abs(tc.x) < 0.50)) ||

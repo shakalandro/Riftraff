@@ -203,12 +203,12 @@ const int EYE_RIGHT = -1;
 {
     if (!vertexArrayLeft) {
         [self setupVertexArray:&vertexArrayLeft
-                        forEye:EYE_LEFT)
+                        forEye:EYE_LEFT
                withTextureRect:frameBoundsLeft];
     }
     if (!vertexArrayRight) {
         [self setupVertexArray:&vertexArrayRight
-                        forEye:EYE_RIGHT)
+                        forEye:EYE_RIGHT
                withTextureRect:frameBoundsRight];
     }
 }
