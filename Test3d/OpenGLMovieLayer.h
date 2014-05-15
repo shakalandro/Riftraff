@@ -44,8 +44,8 @@ using namespace OVR::Util::Render;
 
     // Self coordinates of the frame
     CGRect                  frameBounds;
-    CGRect                  leftEyeFrameBounds;
-    CGRect                  rightEyeFrameBounds;
+    CGRect                  frameBoundsLeft;
+    CGRect                  frameBoundsRight;
 
     BOOL                    initialized;
 

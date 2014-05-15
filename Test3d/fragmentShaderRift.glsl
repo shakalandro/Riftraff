@@ -1,5 +1,6 @@
 #version 150
-in vec4 position;
+in vec4 texPosition;
+in vec4 vertPosition;
 out vec4 fragColor;
 uniform sampler2DRect tex;
 uniform vec2 LensCenter;
@@ -21,15 +22,14 @@ vec2 HmdWarp(vec2 in01)
 }
 void main(void)
 {
-    vec2 tc = HmdWarp(vec2(position.x-LensCenter.x, position.y));
+    vec2 tc = HmdWarp(vec2(texPosition.x-LensCenter.x, texPosition.y));
 
     fragColor = vec4(abs(tc.x), abs(tc.y), 0.0, 1.0);
     if (((abs(tc.x) > 0.40) && (abs(tc.x) < 0.50)) ||
         ((abs(tc.y) > 0.40) && (abs(tc.y) < 0.50))) {
         fragColor = vec4(0.0, 0.0, 1.0, 1.0);
     }
-    // Render the texture pixel from the distorted coords
-    // fragColor = texture(tex, tc);
+    fragColor = texelFetch(tex, ivec2(tc.x, tc.y));
     if (any(notEqual(clamp(tc,
                            ScreenCenter-vec2(0.5,0.5),
                            ScreenCenter+vec2(0.5,0.5)

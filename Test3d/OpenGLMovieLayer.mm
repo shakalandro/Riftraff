@@ -124,7 +124,10 @@ const int EYE_RIGHT = -1;
 
 - (void) setupVertexArray:(GLuint *)vertexArray
                    forEye:(int)eye
+          withTextureRect:(CGRect)textureBounds
 {
+    glDeleteVertexArrays(1, vertexArray);
+
     // Setup the vertex array
     glGenVertexArrays(1, vertexArray);
     [self reportError:@"glGenVertexArrays"];
@@ -139,7 +142,15 @@ const int EYE_RIGHT = -1;
         leftX, -1.0f,
         rightX, -1.0f,
         leftX,  1.0f,
-        rightX,  1.0f
+        rightX,  1.0f,
+        (GLfloat)textureBounds.origin.x,
+        (GLfloat)textureBounds.origin.y + (GLfloat)textureBounds.size.height,
+        (GLfloat)textureBounds.origin.x + (GLfloat)textureBounds.size.width,
+        (GLfloat)textureBounds.origin.y + (GLfloat)textureBounds.size.height,
+        (GLfloat)textureBounds.origin.x,
+        (GLfloat)textureBounds.origin.y,
+        (GLfloat)textureBounds.origin.x + (GLfloat)textureBounds.size.width,
+        (GLfloat)textureBounds.origin.y,
     };
 
     GLuint vertexBuffer;
@@ -157,7 +168,7 @@ const int EYE_RIGHT = -1;
     [self reportError:@"glVertexAttribPointer(vertexPosition)"];
     glEnableVertexAttribArray(texturePositionLoc);
     [self reportError:@"glEnableVertexAttribArray(texturePosition)"];
-    glVertexAttribPointer(texturePositionLoc, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(texturePositionLoc, 2, GL_FLOAT, GL_TRUE, 0, (GLvoid*)32);
     [self reportError:@"glVertexAttribPointer(texturePosition)"];
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -166,12 +177,18 @@ const int EYE_RIGHT = -1;
     glDeleteBuffers(1, &vertexBuffer);
 }
 
-- (void) setupVertexArraysAndBuffers
+- (void) setupVertexArrays
 {
-    [self setupVertexArray:&vertexArrayLeft
-                    forEye:0-(EYE_LEFT)];
-    [self setupVertexArray:&vertexArrayRight
-                    forEye:0-(EYE_RIGHT)];
+    if (!vertexArrayLeft) {
+        [self setupVertexArray:&vertexArrayLeft
+                        forEye:0-(EYE_LEFT)
+               withTextureRect:frameBoundsLeft];
+    }
+    if (!vertexArrayRight) {
+        [self setupVertexArray:&vertexArrayRight
+                        forEye:0-(EYE_RIGHT)
+               withTextureRect:frameBoundsRight];
+    }
 }
 
 - (void)releaseCGLContext:(CGLContextObj)glContext
@@ -319,8 +336,6 @@ const int EYE_RIGHT = -1;
 
         [self createProgram];
 
-        [self setupVertexArraysAndBuffers];
-
         initialized = true;
     }
 
@@ -359,14 +374,17 @@ const int EYE_RIGHT = -1;
                                      upperLeft[1],
                                      lowerRight[0] - upperLeft[0],
                                      lowerRight[1] - upperLeft[1]);
-            leftEyeFrameBounds = CGRectMake(frameBounds.origin.x,
+            frameBoundsLeft = CGRectMake(frameBounds.origin.x,
                                             frameBounds.origin.y,
                                             frameBounds.size.width/2,
                                             frameBounds.size.height);
-            rightEyeFrameBounds = CGRectOffset(leftEyeFrameBounds,
-                                               leftEyeFrameBounds.size.width,
+            frameBoundsRight = CGRectOffset(frameBoundsLeft,
+                                               frameBoundsLeft.size.width,
                                                0);
 
+            // Setup the vertex arrays here because we need the texture size
+            [self setupVertexArrays];
+            
             return YES;
         }
     }
@@ -402,7 +420,7 @@ const int EYE_RIGHT = -1;
     assert(textureTarget == GL_TEXTURE_RECTANGLE);
 
     // Set unit 2 as the active target unit
-    glActiveTexture(GL_TEXTURE2);
+    glActiveTexture(GL_TEXTURE0);
     [self reportError:@"glActiveTexture"];
 
     // Bind to the current frame texture
@@ -410,18 +428,18 @@ const int EYE_RIGHT = -1;
     [self reportError:@"glBindTexture"];
 
     // Load the texture index in the sampler
-    glUniform1i(textureLoc, 2);
+    glUniform1i(textureLoc, 0);
     [self reportError:@"glUniform1i(textureLoc)"];
 
     // Render left eye
     [self renderEyeInViewBounds:leftEyeViewBounds
-              withTextureBounds:leftEyeFrameBounds
+              withTextureBounds:frameBoundsLeft
                  andVertexArray:vertexArrayLeft
                          forEye:EYE_LEFT];
 
     // Render right eye
     [self renderEyeInViewBounds:rightEyeViewBounds
-              withTextureBounds:rightEyeFrameBounds
+              withTextureBounds:frameBoundsRight
                  andVertexArray:vertexArrayRight
                          forEye:EYE_RIGHT];
 
@@ -446,9 +464,9 @@ const int EYE_RIGHT = -1;
 //    float x = float(textureBounds.origin.x) / float(textureBounds.size.width*2);
 //    float y = float(textureBounds.origin.y) / float(textureBounds.size.height);
 
-    float w = 2.0;
+    float w = 1.0;
     float h = 2.0;
-    float x = -1.0;
+    float x = -0.5;
     float y = -1.0;
 
     float aspect = stereoConfig.GetAspect();
