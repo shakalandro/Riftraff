@@ -134,27 +134,12 @@ const int EYE_RIGHT = -1;
     glBindVertexArray(*vertexArray);
     [self reportError:@"glBindVertexArray"];
 
-    // eye is 1|-1
-    // eyeVert is -1|1
-    // eyeTex is 0|0.5
     float vertEye = -1.0f * eye;
-    float eyeTex = (vertEye + 1.0f) / 4.0f;
 
-    //
     float leftVertX = (-1.0f + vertEye) / 2;
     float rightVertX = (1.0f + vertEye) / 2;
     float topVertY = 1.0f;
     float bottomVertY = -1.0f;
-
-    float leftTexX = (leftVertX + 1) / 2;
-    float rightTexX = (rightVertX + 1) / 2;
-    float topTexY = ((-1.0f * topVertY) + 1) / 2;
-    float bottomTexY = ((-1.0f * bottomVertY) + 1) / 2;
-
-    float leftWarpX = (leftTexX - eyeTex) * 4.0f - 1.0f;
-    float rightWarpX = (rightTexX - eyeTex) *4.0f - 1.0f;
-    float topWarpY = topTexY * 2.0f - 1.0f;
-    float bottomWarpY = bottomTexY * 2.0f - 1.0f;
 
     // Setup the left vertex buffer
     // Use absolute texture coordinates and texelFetch() for the GL_TEXTURE_RECTANGLE
@@ -162,8 +147,8 @@ const int EYE_RIGHT = -1;
     // for some reason
     GLfloat vertices[] = {
         leftVertX,  topVertY,
-        rightVertX,  topVertY,
-        leftVertX, bottomVertY,
+        rightVertX, topVertY,
+        leftVertX,  bottomVertY,
         rightVertX, bottomVertY,
         (GLfloat)textureBounds.origin.x,
         (GLfloat)textureBounds.origin.y,
@@ -481,44 +466,73 @@ const int EYE_RIGHT = -1;
     glBindVertexArray(vertexArray);
     [self reportError:@"glBindVertexArray"];
 
-//    float w = float(viewBounds.size.width) / float(textureBounds.size.width*2);
-//    float h = float(viewBounds.size.height) / float(textureBounds.size.height);
-//    float x = float(textureBounds.origin.x) / float(textureBounds.size.width*2);
-//    float y = float(textureBounds.origin.y) / float(textureBounds.size.height);
+    // eye is 1|-1
+    // eyeVert is -1|1
+    // eyeTex is 0|0.5
+    float vertEye = -1.0f * eye;
+    float eyeTex = (vertEye + 1.0f) / 4.0f;
 
-    float w = 1.0;
-    float h = 2.0;
-    float x = -0.5;
-    float y = -1.0;
+    // vertex bounds in [-1,1]
+    // (-1,1, 0,-1) | (0,1, 1,-1)
+    float leftVertX = (-1.0f + vertEye) / 2;
+    float rightVertX = (1.0f + vertEye) / 2;
+    float topVertY = 1.0f;
+    float bottomVertY = -1.0f;
 
+    // normalized texture bounds in [0,1]
+    // (0,0, 0.5,1) | (0.5,0, 1,1)
+    float leftTexX = (leftVertX + 1) / 2;
+    float rightTexX = (rightVertX + 1) / 2;
+    float topTexY = ((-1.0f * topVertY) + 1) / 2;
+    float bottomTexY = ((-1.0f * bottomVertY) + 1) / 2;
+
+    // normalized texture bounds converted to bounds in [-1,1]
+    // always (1,1, -1,-1)
+    // not used currently
+    float leftWarpX = (leftTexX - eyeTex) * 4.0f - 1.0f;
+    float rightWarpX = (rightTexX - eyeTex) *4.0f - 1.0f;
+    float topWarpY = topTexY * 2.0f - 1.0f;
+    float bottomWarpY = bottomTexY * 2.0f - 1.0f;
+    
     float aspect = stereoConfig.GetAspect();
     float scale = stereoConfig.GetDistortionScale();
     float scaleFactor = 1.0f / scale;
     float eyeOffset = eye * stereoConfig.GetProjectionCenterOffset();
 
-    float param_x = x + w * 0.5f;
-    float param_y = y + h * 0.5f;
-    // Screen center
+    // Oh, so close...
+    // TODO: Figure out the proper parameters!!!
+
+    float vertWidth = rightVertX - leftVertX;
+    float vertHeight = topVertY - bottomVertY;
+
+    // Screen center (in vertex normalized coords)
+    float param_x = leftVertX + vertWidth * 0.5f;
+    float param_y = bottomVertY + vertHeight * 0.5f;
     glUniform2f(screenCenterLoc,
                 param_x,
                 param_y);
 
-    param_x = param_x + eyeOffset;
-    // Eye center
+    float texWidth = rightTexX - leftTexX;
+    float texHeight = bottomTexY - topTexY;
+
+    // Eye center is offset from screen center
+//    param_x = leftTexX + texWidth * 0.5f + eyeOffset;
+//    param_y = topTexY + texHeight * 0.5f;
+    param_x = param_x + eyeOffset * 0.5f;
     glUniform2f(lensCenterLoc,
                 param_x,
                 param_y);
 
-    param_x = 2.0f / w;
-    param_y = (2.0f / h) / aspect;
-    // Scale in the texture coordinates [] to [-1,1] in order
+    param_x = 2.0f / vertWidth;
+    param_y = (2.0f / vertHeight) / aspect;
+    // Scale in the normalized texture coordinates to [-1,1] in order
     // to do the distortion properly
     glUniform2f(scaleInLoc,
                 param_x,
                 param_y);
 
-    param_x = (w / 2.0f) * scaleFactor;
-    param_y = (h / 2) * scaleFactor * aspect;
+    param_x = (vertWidth / 2.0f) * scaleFactor;
+    param_y = (vertHeight / 2.0f) * scaleFactor * aspect;
     // Scale out the distorted sample
     glUniform2f(scaleLoc,
                 param_x,
