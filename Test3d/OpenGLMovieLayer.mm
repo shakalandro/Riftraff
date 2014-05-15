@@ -304,7 +304,7 @@ const int EYE_RIGHT = -1;
 {
     // Create ID for shaders
     vertexShader = [self createShader:GL_VERTEX_SHADER withName:@"vertexShader"];
-    fragmentShader = [self createShader:GL_FRAGMENT_SHADER withName:@"fragmentShaderPass"];
+    fragmentShader = [self createShader:GL_FRAGMENT_SHADER withName:@"fragmentShaderRift"];
 
     prog = glCreateProgram();
     [self reportError:@"glCreateProgram"];

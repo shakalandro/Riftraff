@@ -22,14 +22,15 @@ vec2 HmdWarp(vec2 in01)
 }
 void main(void)
 {
-    vec2 tc = HmdWarp(texPosition.xy / textureSize(tex));
+    vec2 ts = textureSize(tex);
+    vec2 tc = HmdWarp(texPosition.xy / ts);
 
     fragColor = vec4(abs(tc.x), abs(tc.y), 0.0, 1.0);
     if (((abs(tc.x) > 0.40) && (abs(tc.x) < 0.50)) ||
         ((abs(tc.y) > 0.40) && (abs(tc.y) < 0.50))) {
         fragColor = vec4(0.0, 0.0, 1.0, 1.0);
     }
-    fragColor = texelFetch(tex, ivec2(tc.x, tc.y));
+    fragColor = texelFetch(tex, ivec2(tc.x * ts.x, tc.y * ts.y));
     if (any(notEqual(clamp(tc,
                            ScreenCenter-vec2(0.5,0.5),
                            ScreenCenter+vec2(0.5,0.5)
