@@ -282,6 +282,8 @@ const int EYE_RIGHT = -1;
     [self reportError:@"glGetUniformLocation(ScaleIn)"];
     hmdWarpParamLoc = glGetUniformLocation(prog, "HmdWarpParam");
     [self reportError:@"after glGetUniformLocation(HmdWarpParam)"];
+    eyeLoc = glGetUniformLocation(prog, "eye");
+    [self reportError:@"after glGetUniformLocation(HmdWarpParam)"];
 
 }
 
@@ -519,8 +521,8 @@ const int EYE_RIGHT = -1;
 //    float texHeight = bottomTexY - topTexY;
 
     // Eye center is offset from screen center
-    param_x = x + w * 0.5f + eyeOffset * 0.5f;
-    param_y = y + h * 0.5f;
+    param_x = eyeOffset * 0.5f;
+    param_y = 0.0f;
 //    param_x = leftVertX + (vertWidth + eyeOffset) * 0.5f;
 //    param_y = bottomVertY + vertHeight * 0.5f;
 //    param_x = leftTexX + (texWidth + eyeOffset * 0.5f) * 0.5f;
@@ -558,6 +560,9 @@ const int EYE_RIGHT = -1;
 //    param_y = (2.0f / texHeight) / aspect;
     NSLog(@"scaleIn: (%f, %f)", param_x, param_y);
     glUniform2f(scaleInLoc, param_x, param_y);
+
+    NSLog(@"eye: %d", eye);
+    glUniform1i(eyeLoc, eye);
 
     // Static array of distortion coefficients for the barrel transform function
     glUniform4fv(hmdWarpParamLoc, 1, stereoConfig.GetDistortionConfig().K);

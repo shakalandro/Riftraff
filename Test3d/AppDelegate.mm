@@ -21,8 +21,8 @@
     object:nil];
 
   [self setUpMenuItems];
-  //[self openDocument:self];
-  [self startMovie:[[NSBundle mainBundle] URLForResource:@"shrek" withExtension:@"mp4"]];
+  [self openDocument:self];
+  //[self startMovie:[[NSBundle mainBundle] URLForResource:@"shrek" withExtension:@"mp4"]];
 }
 
 - (void)startMovie:(NSURL*) url

@@ -33,6 +33,7 @@ using namespace OVR::Util::Render;
     GLint                   scaleLoc;
     GLint                   scaleInLoc;
     GLint                   hmdWarpParamLoc;
+    GLint                   eyeLoc;
 
     // Vertices array and buffer
     GLuint                  vertexArrayLeft;
