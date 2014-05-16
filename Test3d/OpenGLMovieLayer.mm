@@ -502,41 +502,55 @@ const int EYE_RIGHT = -1;
     // Oh, so close...
     // TODO: Figure out the proper parameters!!!
 
+    float w = 1.0;
+    float h = 2.0;
+    float x = -0.5;
+    float y = -1.0;
+
+    float param_x;
+    float param_y;
+
     float vertWidth = rightVertX - leftVertX;
     float vertHeight = topVertY - bottomVertY;
-
-    // Screen center (in vertex normalized coords)
-    float param_x = leftVertX + vertWidth * 0.5f;
-    float param_y = bottomVertY + vertHeight * 0.5f;
-    glUniform2f(screenCenterLoc,
-                param_x,
-                param_y);
-
-    float texWidth = rightTexX - leftTexX;
-    float texHeight = bottomTexY - topTexY;
+//    float texWidth = rightTexX - leftTexX;
+//    float texHeight = bottomTexY - topTexY;
 
     // Eye center is offset from screen center
-//    param_x = leftTexX + texWidth * 0.5f + eyeOffset;
+    param_x = x + w * 0.5f + eyeOffset * 0.5f;
+    param_y = y + h * 0.5f;
+//    param_x = leftVertX + (vertWidth + eyeOffset) * 0.5f;
+//    param_y = bottomVertY + vertHeight * 0.5f;
+//    param_x = leftTexX + (texWidth + eyeOffset * 0.5f) * 0.5f;
 //    param_y = topTexY + texHeight * 0.5f;
-    param_x = param_x + eyeOffset * 0.5f;
-    glUniform2f(lensCenterLoc,
-                param_x,
-                param_y);
+    glUniform2f(lensCenterLoc, param_x, param_y);
+    
+    // Screen center
+    param_x = x + w * 0.5f;
+    param_y = y + h * 0.5f;
+//    param_x = leftVertX + vertWidth * 0.5f;
+//    param_y = bottomVertY + vertHeight * 0.5f;
+//    param_x = leftTexX + texWidth * 0.5f;
+//    param_y = topTexY + texHeight * 0.5f;
+    glUniform2f(screenCenterLoc, param_x, param_y);
 
-    param_x = 2.0f / vertWidth;
-    param_y = (2.0f / vertHeight) / aspect;
-    // Scale in the normalized texture coordinates to [-1,1] in order
-    // to do the distortion properly
-    glUniform2f(scaleInLoc,
-                param_x,
-                param_y);
-
-    param_x = (vertWidth / 2.0f) * scaleFactor;
-    param_y = (vertHeight / 2.0f) * scaleFactor * aspect;
     // Scale out the distorted sample
-    glUniform2f(scaleLoc,
-                param_x,
-                param_y);
+    param_x = (w / 2.0f) * scaleFactor;
+    param_y = (h / 2) * scaleFactor * aspect;
+//    param_x = (vertWidth * 0.5f) * scaleFactor;
+//    param_y = (vertHeight * 0.5f) * scaleFactor * aspect;
+//    param_x = (texWidth * 0.5f) * scaleFactor;
+//    param_y = (texHeight * 0.5f) * scaleFactor * aspect;
+    glUniform2f(scaleLoc, param_x, param_y);
+
+    // Scale in the texture coordinates to [-1,1]
+    // in order to do the distortion properly
+    param_x = 2.0f / w;
+    param_y = (2.0f / h) / aspect;
+//    param_x = 2.0f / vertWidth;
+//    param_y = (2.0f / vertHeight) / aspect;
+//    param_x = 2.0f / texWidth;
+//    param_y = (2.0f / texHeight) / aspect;
+    glUniform2f(scaleInLoc, param_x, param_y);
 
     // Static array of distortion coefficients for the barrel transform function
     glUniform4fv(hmdWarpParamLoc, 1, stereoConfig.GetDistortionConfig().K);

@@ -10,7 +10,7 @@ uniform vec2 ScaleIn;
 uniform vec4 HmdWarpParam;
 vec2 HmdWarp(vec2 in01)
 {
-    vec2 theta = (in01 + LensCenter) * ScaleIn;
+    vec2 theta = (in01 - LensCenter) * ScaleIn;
     float rSq = theta.x * theta.x + theta.y * theta.y;
     vec2 rvector = theta * (
                             HmdWarpParam.x +
