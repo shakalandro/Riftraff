@@ -35,6 +35,7 @@
 
   [[[self window] contentView] setWantsLayer:YES];
   [[[[self window] contentView] layer] addSublayer:_layer];
+
   [[_layer movie] seekToTime:kCMTimeZero];
   [[_layer movie] play];
 }

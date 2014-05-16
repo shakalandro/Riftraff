@@ -463,6 +463,7 @@ const int EYE_RIGHT = -1;
                andVertexArray:(GLuint)vertexArray
                        forEye:(int)eye
 {
+    NSLog(@"left eye: %d", eye == EYE_LEFT);
     glBindVertexArray(vertexArray);
     [self reportError:@"glBindVertexArray"];
 
@@ -473,26 +474,28 @@ const int EYE_RIGHT = -1;
     float eyeTex = (vertEye + 1.0f) / 4.0f;
 
     // vertex bounds in [-1,1]
-    // (-1,1, 0,-1) | (0,1, 1,-1)
+    // (-1,1), (0,-1) | (0,1), (1,-1)
     float leftVertX = (-1.0f + vertEye) / 2;
     float rightVertX = (1.0f + vertEye) / 2;
     float topVertY = 1.0f;
     float bottomVertY = -1.0f;
 
     // normalized texture bounds in [0,1]
-    // (0,0, 0.5,1) | (0.5,0, 1,1)
+    // (0,0), (0.5,1) | (0.5,0), (1,1)
     float leftTexX = (leftVertX + 1) / 2;
     float rightTexX = (rightVertX + 1) / 2;
     float topTexY = ((-1.0f * topVertY) + 1) / 2;
     float bottomTexY = ((-1.0f * bottomVertY) + 1) / 2;
 
     // normalized texture bounds converted to bounds in [-1,1]
-    // always (1,1, -1,-1)
+    // always (1,1), (-1,-1)
     // not used currently
     float leftWarpX = (leftTexX - eyeTex) * 4.0f - 1.0f;
     float rightWarpX = (rightTexX - eyeTex) *4.0f - 1.0f;
     float topWarpY = topTexY * 2.0f - 1.0f;
     float bottomWarpY = bottomTexY * 2.0f - 1.0f;
+
+    NSLog(@"leftWarpX: %f, rightWarpX: %f, topWarpY: %f, bottomWarpY: %f", leftWarpX, rightWarpX, topWarpY, bottomWarpY);
     
     float aspect = stereoConfig.GetAspect();
     float scale = stereoConfig.GetDistortionScale();
@@ -522,6 +525,7 @@ const int EYE_RIGHT = -1;
 //    param_y = bottomVertY + vertHeight * 0.5f;
 //    param_x = leftTexX + (texWidth + eyeOffset * 0.5f) * 0.5f;
 //    param_y = topTexY + texHeight * 0.5f;
+    NSLog(@"lensCenter: (%f, %f)", param_x, param_y);
     glUniform2f(lensCenterLoc, param_x, param_y);
     
     // Screen center
@@ -531,6 +535,7 @@ const int EYE_RIGHT = -1;
 //    param_y = bottomVertY + vertHeight * 0.5f;
 //    param_x = leftTexX + texWidth * 0.5f;
 //    param_y = topTexY + texHeight * 0.5f;
+    NSLog(@"screenCenter: (%f, %f)", param_x, param_y);
     glUniform2f(screenCenterLoc, param_x, param_y);
 
     // Scale out the distorted sample
@@ -540,6 +545,7 @@ const int EYE_RIGHT = -1;
 //    param_y = (vertHeight * 0.5f) * scaleFactor * aspect;
 //    param_x = (texWidth * 0.5f) * scaleFactor;
 //    param_y = (texHeight * 0.5f) * scaleFactor * aspect;
+    NSLog(@"scaleOut: (%f, %f)", param_x, param_y);
     glUniform2f(scaleLoc, param_x, param_y);
 
     // Scale in the texture coordinates to [-1,1]
@@ -550,6 +556,7 @@ const int EYE_RIGHT = -1;
 //    param_y = (2.0f / vertHeight) / aspect;
 //    param_x = 2.0f / texWidth;
 //    param_y = (2.0f / texHeight) / aspect;
+    NSLog(@"scaleIn: (%f, %f)", param_x, param_y);
     glUniform2f(scaleInLoc, param_x, param_y);
 
     // Static array of distortion coefficients for the barrel transform function
