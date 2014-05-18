@@ -28,10 +28,12 @@ using namespace OVR::Util::Render;
 
     // Uniforms
     GLint                   textureLoc;
-    GLint                   lensCenterLoc;
+    GLint                   lensOffsetLoc;
+    GLint                   screenSizeLoc;
     GLint                   screenCenterLoc;
     GLint                   scaleLoc;
     GLint                   scaleInLoc;
+    GLint                   transInLoc;
     GLint                   hmdWarpParamLoc;
     GLint                   eyeLoc;
 

@@ -21,13 +21,12 @@
     object:nil];
 
   [self setUpMenuItems];
+
   [self openDocument:self];
-  //[self startMovie:[[NSBundle mainBundle] URLForResource:@"shrek" withExtension:@"mp4"]];
 }
 
 - (void)startMovie:(NSURL*) url
 {
-  NSLog(@"playing url = %@", url);
   AVPlayer *player = [AVPlayer playerWithURL:[url absoluteURL]];
 
   _layer = [[OpenGLMovieLayer alloc] initWithMovie:player];
@@ -67,7 +66,6 @@
 }
 
 - (IBAction)windowDidResize:(id)pId {
-  NSLog(@"Window did resize");
   [_layer setFrame:NSRectToCGRect([[[self window] contentView] bounds])];
   [[[[self window] contentView] layer] addSublayer:_layer];
 }

@@ -21,11 +21,9 @@
 		529ECB96191CA9DE00462050 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C918019191C413800CD2C77 /* OpenGL.framework */; };
 		529ECB97191CAD5300462050 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BE191C9517009720A3 /* QuartzCore.framework */; };
 		529ECB98191CB03A00462050 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BB191C950D009720A3 /* CoreVideo.framework */; };
-		52C4AFDE191C823B0099C196 /* shrek.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 52C4AFDD191C823B0099C196 /* shrek.mp4 */; };
 		52C4AFE1191C86EC0099C196 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C4AFDF191C86EC0099C196 /* AVFoundation.framework */; };
 		52C4AFE2191C86EC0099C196 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C4AFE0191C86EC0099C196 /* AVKit.framework */; };
 		52D4CE0E191CEC0A00470354 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526E13BA191C950D009720A3 /* CoreMedia.framework */; };
-		8C917F75191C363300CD2C77 /* libovr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C917F13191C363300CD2C77 /* libovr.a */; };
 		8C917FB0191C3B5F00CD2C77 /* OVR_Device.h in Headers */ = {isa = PBXBuildFile; fileRef = 8C917F40191C363300CD2C77 /* OVR_Device.h */; };
 		8C917FB1191C3B5F00CD2C77 /* OVR_DeviceConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 8C917F41191C363300CD2C77 /* OVR_DeviceConstants.h */; };
 		8C917FB2191C3B5F00CD2C77 /* OVR_DeviceHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C917F42191C363300CD2C77 /* OVR_DeviceHandle.cpp */; };
@@ -118,6 +116,7 @@
 		8C9180261922BDB100CD2C77 /* vertexShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 8C9180251922BDB100CD2C77 /* vertexShader.glsl */; };
 		8C91802B1922C3B600CD2C77 /* fragmentShaderPass.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 8C91802A1922C3B600CD2C77 /* fragmentShaderPass.glsl */; };
 		8C91802D1922C48400CD2C77 /* fragmentShaderRift.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 8C91802C1922C48400CD2C77 /* fragmentShaderRift.glsl */; };
+		8CECDE3A1928B6FE00F5DFA4 /* libovr.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C917FAC191C3B3F00CD2C77 /* libovr.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,7 +137,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		52643C2F191C28380008350D /* Test3d.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test3d.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		52643C2F191C28380008350D /* Rift-raff.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rift-raff.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52643C32191C28380008350D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		52643C35191C28380008350D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		52643C36191C28380008350D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -282,6 +281,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8CECDE3A1928B6FE00F5DFA4 /* libovr.dylib in Frameworks */,
 				52D4CE0E191CEC0A00470354 /* CoreMedia.framework in Frameworks */,
 				529ECB98191CB03A00462050 /* CoreVideo.framework in Frameworks */,
 				529ECB97191CAD5300462050 /* QuartzCore.framework in Frameworks */,
@@ -290,7 +290,6 @@
 				52C4AFE1191C86EC0099C196 /* AVFoundation.framework in Frameworks */,
 				52C4AFE2191C86EC0099C196 /* AVKit.framework in Frameworks */,
 				52643C33191C28380008350D /* Cocoa.framework in Frameworks */,
-				8C917F75191C363300CD2C77 /* libovr.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,7 +331,7 @@
 		52643C30191C28380008350D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				52643C2F191C28380008350D /* Test3d.app */,
+				52643C2F191C28380008350D /* Rift-raff.app */,
 				52643C50191C28380008350D /* Test3dTests.xctest */,
 				8C917FAC191C3B3F00CD2C77 /* libovr.dylib */,
 			);
@@ -683,7 +682,7 @@
 			);
 			name = Test3d;
 			productName = Test3d;
-			productReference = 52643C2F191C28380008350D /* Test3d.app */;
+			productReference = 52643C2F191C28380008350D /* Rift-raff.app */;
 			productType = "com.apple.product-type.application";
 		};
 		52643C4F191C28380008350D /* Test3dTests */ = {
@@ -760,12 +759,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8C9180311922C6D100CD2C77 /* fragmentShaderPassThrough.glsl in Resources */,
 				8C9180261922BDB100CD2C77 /* vertexShader.glsl in Resources */,
 				52643C3D191C28380008350D /* InfoPlist.strings in Resources */,
 				52643C4B191C28380008350D /* Images.xcassets in Resources */,
 				8C91802D1922C48400CD2C77 /* fragmentShaderRift.glsl in Resources */,
-				52C4AFDE191C823B0099C196 /* shrek.mp4 in Resources */,
 				52643C43191C28380008350D /* Credits.rtf in Resources */,
 				8C91802B1922C3B600CD2C77 /* fragmentShaderPass.glsl in Resources */,
 				52643C49191C28380008350D /* MainMenu.xib in Resources */,
@@ -967,15 +964,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Test3d/Test3d-Prefix.pch";
 				INFOPLIST_FILE = "Test3d/Test3d-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/LibOVR/Lib/MacOS/Debug",
 					"$(SRCROOT)/LibOVR/Lib/MacOS/Release",
+					/Users/rvm4/test3d/LibOVR/Lib/MacOS/Release,
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Rift-raff";
+				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -985,15 +986,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Test3d/Test3d-Prefix.pch";
 				INFOPLIST_FILE = "Test3d/Test3d-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/LibOVR/Lib/MacOS/Debug",
 					"$(SRCROOT)/LibOVR/Lib/MacOS/Release",
+					/Users/rvm4/test3d/LibOVR/Lib/MacOS/Release,
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Rift-raff";
+				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1049,6 +1054,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INSTALL_PATH = "@executable_path/../Frameworks/";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/LIbOVR/MacOS/$(CONFIGURATION)\"",
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Debug\"",
@@ -1060,7 +1066,9 @@
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/LibOVR_With_Samples.build/Release/ovr.build/Objects-normal/i386\"",
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/LibOVR_With_Samples.build/Release/ovr.build/Objects-normal/x86_64\"",
 				);
+				MACH_O_TYPE = staticlib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
 				SYMROOT = "$(SRCROOT)/LibOVR/Lib/MacOS";
 			};
 			name = Debug;
@@ -1072,6 +1080,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = lib;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INSTALL_PATH = "@executable_path/../Frameworks/";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/LIbOVR/MacOS/$(CONFIGURATION)\"",
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Debug\"",
@@ -1083,7 +1092,9 @@
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/LibOVR_With_Samples.build/Release/ovr.build/Objects-normal/i386\"",
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/LibOVR_With_Samples.build/Release/ovr.build/Objects-normal/x86_64\"",
 				);
+				MACH_O_TYPE = staticlib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
 				SYMROOT = "$(SRCROOT)/LibOVR/Lib/MacOS";
 			};
 			name = Release;
