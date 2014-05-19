@@ -142,18 +142,18 @@
 		52643C35191C28380008350D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		52643C36191C28380008350D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		52643C37191C28380008350D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		52643C3A191C28380008350D /* Test3d-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Test3d-Info.plist"; sourceTree = "<group>"; };
+		52643C3A191C28380008350D /* Rift-raff-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Rift-raff-Info.plist"; sourceTree = "<group>"; };
 		52643C3C191C28380008350D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52643C3E191C28380008350D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		52643C40191C28380008350D /* Test3d-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Test3d-Prefix.pch"; sourceTree = "<group>"; };
+		52643C40191C28380008350D /* Rift-raff-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Rift-raff-Prefix.pch"; sourceTree = "<group>"; };
 		52643C42191C28380008350D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		52643C44191C28380008350D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		52643C45191C28380008350D /* AppDelegate.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		52643C48191C28380008350D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		52643C4A191C28380008350D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		52643C50191C28380008350D /* Test3dTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Test3dTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		52643C50191C28380008350D /* Rift-raffTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rift-raffTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52643C51191C28380008350D /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		52643C58191C28380008350D /* Test3dTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Test3dTests-Info.plist"; sourceTree = "<group>"; };
+		52643C58191C28380008350D /* Rift-raffTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Rift-raffTests-Info.plist"; sourceTree = "<group>"; };
 		52643C5A191C28380008350D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52643C5C191C28380008350D /* Test3dTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Test3dTests.m; sourceTree = "<group>"; };
 		526E13BA191C950D009720A3 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -166,7 +166,7 @@
 		52893CCD191CA625000FB98E /* OpenGLMovieLayer.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = OpenGLMovieLayer.mm; sourceTree = "<group>"; };
 		52893CD0191CA77D000FB98E /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		529A8806191C75C200F346E3 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
-		52C4AFDD191C823B0099C196 /* shrek.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = shrek.mp4; sourceTree = "<group>"; };
+		52C4AFDD191C823B0099C196 /* shrek.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = shrek.mp4; path = ../shrek.mp4; sourceTree = "<group>"; };
 		52C4AFDF191C86EC0099C196 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		52C4AFE0191C86EC0099C196 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		8C917F0E191C363300CD2C77 /* OVR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OVR.h; sourceTree = "<group>"; };
@@ -321,8 +321,8 @@
 			children = (
 				8C917FA5191C388800CD2C77 /* Assets */,
 				8C917F0C191C363300CD2C77 /* LibOVR */,
-				52643C38191C28380008350D /* Test3d */,
-				52643C56191C28380008350D /* Test3dTests */,
+				52643C38191C28380008350D /* Rift-raff */,
+				52643C56191C28380008350D /* RiftRaffTests */,
 				52643C31191C28380008350D /* Frameworks */,
 				52643C30191C28380008350D /* Products */,
 			);
@@ -332,7 +332,7 @@
 			isa = PBXGroup;
 			children = (
 				52643C2F191C28380008350D /* Rift-raff.app */,
-				52643C50191C28380008350D /* Test3dTests.xctest */,
+				52643C50191C28380008350D /* Rift-raffTests.xctest */,
 				8C917FAC191C3B3F00CD2C77 /* libovr.dylib */,
 			);
 			name = Products;
@@ -373,7 +373,7 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		52643C38191C28380008350D /* Test3d */ = {
+		52643C38191C28380008350D /* Rift-raff */ = {
 			isa = PBXGroup;
 			children = (
 				52893CCC191CA625000FB98E /* OpenGLMovieLayer.h */,
@@ -384,34 +384,36 @@
 				52643C4A191C28380008350D /* Images.xcassets */,
 				52643C39191C28380008350D /* Supporting Files */,
 			);
+			name = "Rift-raff";
 			path = Test3d;
 			sourceTree = "<group>";
 		};
 		52643C39191C28380008350D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				52643C3A191C28380008350D /* Test3d-Info.plist */,
+				52643C3A191C28380008350D /* Rift-raff-Info.plist */,
 				52643C3B191C28380008350D /* InfoPlist.strings */,
 				52643C3E191C28380008350D /* main.m */,
-				52643C40191C28380008350D /* Test3d-Prefix.pch */,
+				52643C40191C28380008350D /* Rift-raff-Prefix.pch */,
 				52643C41191C28380008350D /* Credits.rtf */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		52643C56191C28380008350D /* Test3dTests */ = {
+		52643C56191C28380008350D /* RiftRaffTests */ = {
 			isa = PBXGroup;
 			children = (
 				52643C5C191C28380008350D /* Test3dTests.m */,
 				52643C57191C28380008350D /* Supporting Files */,
 			);
+			name = RiftRaffTests;
 			path = Test3dTests;
 			sourceTree = "<group>";
 		};
 		52643C57191C28380008350D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				52643C58191C28380008350D /* Test3dTests-Info.plist */,
+				52643C58191C28380008350D /* Rift-raffTests-Info.plist */,
 				52643C59191C28380008350D /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -588,7 +590,6 @@
 			isa = PBXGroup;
 			children = (
 				8C9180241922BD8F00CD2C77 /* Shaders */,
-				52C4AFDD191C823B0099C196 /* shrek.mp4 */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -597,6 +598,7 @@
 			isa = PBXGroup;
 			children = (
 				8C9180251922BDB100CD2C77 /* vertexShader.glsl */,
+				52C4AFDD191C823B0099C196 /* shrek.mp4 */,
 				8C91802A1922C3B600CD2C77 /* fragmentShaderPass.glsl */,
 				8C91802C1922C48400CD2C77 /* fragmentShaderRift.glsl */,
 			);
@@ -667,9 +669,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		52643C2E191C28380008350D /* Test3d */ = {
+		52643C2E191C28380008350D /* Rift-raff */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 52643C60191C28380008350D /* Build configuration list for PBXNativeTarget "Test3d" */;
+			buildConfigurationList = 52643C60191C28380008350D /* Build configuration list for PBXNativeTarget "Rift-raff" */;
 			buildPhases = (
 				52643C2B191C28380008350D /* Sources */,
 				52643C2C191C28380008350D /* Frameworks */,
@@ -680,14 +682,14 @@
 			dependencies = (
 				8C91800F191C3F0E00CD2C77 /* PBXTargetDependency */,
 			);
-			name = Test3d;
+			name = "Rift-raff";
 			productName = Test3d;
 			productReference = 52643C2F191C28380008350D /* Rift-raff.app */;
 			productType = "com.apple.product-type.application";
 		};
-		52643C4F191C28380008350D /* Test3dTests */ = {
+		52643C4F191C28380008350D /* Rift-raffTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 52643C63191C28380008350D /* Build configuration list for PBXNativeTarget "Test3dTests" */;
+			buildConfigurationList = 52643C63191C28380008350D /* Build configuration list for PBXNativeTarget "Rift-raffTests" */;
 			buildPhases = (
 				52643C4C191C28380008350D /* Sources */,
 				52643C4D191C28380008350D /* Frameworks */,
@@ -698,9 +700,9 @@
 			dependencies = (
 				52643C55191C28380008350D /* PBXTargetDependency */,
 			);
-			name = Test3dTests;
+			name = "Rift-raffTests";
 			productName = Test3dTests;
-			productReference = 52643C50191C28380008350D /* Test3dTests.xctest */;
+			productReference = 52643C50191C28380008350D /* Rift-raffTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		8C917FAB191C3B3F00CD2C77 /* ovr */ = {
@@ -734,7 +736,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 52643C2A191C28380008350D /* Build configuration list for PBXProject "Test3d" */;
+			buildConfigurationList = 52643C2A191C28380008350D /* Build configuration list for PBXProject "Rift-raff" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -747,8 +749,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				52643C2E191C28380008350D /* Test3d */,
-				52643C4F191C28380008350D /* Test3dTests */,
+				52643C2E191C28380008350D /* Rift-raff */,
+				52643C4F191C28380008350D /* Rift-raffTests */,
 				8C917FAB191C3B3F00CD2C77 /* ovr */,
 			);
 		};
@@ -843,7 +845,7 @@
 /* Begin PBXTargetDependency section */
 		52643C55191C28380008350D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 52643C2E191C28380008350D /* Test3d */;
+			target = 52643C2E191C28380008350D /* Rift-raff */;
 			targetProxy = 52643C54191C28380008350D /* PBXContainerItemProxy */;
 		};
 		8C91800F191C3F0E00CD2C77 /* PBXTargetDependency */ = {
@@ -966,8 +968,8 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Test3d/Test3d-Prefix.pch";
-				INFOPLIST_FILE = "Test3d/Test3d-Info.plist";
+				GCC_PREFIX_HEADER = "Test3d/Rift-raff-Prefix.pch";
+				INFOPLIST_FILE = "Test3d/Rift-raff-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -988,8 +990,8 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Test3d/Test3d-Prefix.pch";
-				INFOPLIST_FILE = "Test3d/Test3d-Info.plist";
+				GCC_PREFIX_HEADER = "Test3d/Rift-raff-Prefix.pch";
+				INFOPLIST_FILE = "Test3d/Rift-raff-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1018,8 +1020,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "Test3dTests/Test3dTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "Test3dTests/Rift-raffTests-Info.plist";
+				PRODUCT_NAME = "Rift-raffTests";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -1036,8 +1038,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Test3d/Test3d-Prefix.pch";
-				INFOPLIST_FILE = "Test3dTests/Test3dTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "Test3dTests/Rift-raffTests-Info.plist";
+				PRODUCT_NAME = "Rift-raffTests";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -1102,7 +1104,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		52643C2A191C28380008350D /* Build configuration list for PBXProject "Test3d" */ = {
+		52643C2A191C28380008350D /* Build configuration list for PBXProject "Rift-raff" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				52643C5E191C28380008350D /* Debug */,
@@ -1111,7 +1113,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		52643C60191C28380008350D /* Build configuration list for PBXNativeTarget "Test3d" */ = {
+		52643C60191C28380008350D /* Build configuration list for PBXNativeTarget "Rift-raff" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				52643C61191C28380008350D /* Debug */,
@@ -1120,7 +1122,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		52643C63191C28380008350D /* Build configuration list for PBXNativeTarget "Test3dTests" */ = {
+		52643C63191C28380008350D /* Build configuration list for PBXNativeTarget "Rift-raffTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				52643C64191C28380008350D /* Debug */,

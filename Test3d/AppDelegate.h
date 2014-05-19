@@ -19,6 +19,7 @@
 @property (assign) IBOutlet NSWindow *window;
 
 @property OpenGLMovieLayer* layer;
+@property AVPlayer* player;
 
 - (void)setUpMenuItems;
 - (void)startMovie:(NSURL*) url;

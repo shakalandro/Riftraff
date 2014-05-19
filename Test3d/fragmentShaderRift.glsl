@@ -16,9 +16,12 @@ vec2 HmdWarp(vec2 in01)
   // 1) in01 is in the texture's coordinate range
   // 2) translate the coordinate to be centered at the origin
   // 3) apply the oculus lens offset
-  // 3) scale down to the unit range [-1,1]
-  // 4) apply the barrel distortion
-  // 5) apply the inverse of 2-3
+  // 4) scale down to the unit range [-1,1]
+  // 5) apply the barrel distortion
+  // 6) apply the inverse of 2 and 4
+  // NOTE: we do not invert the lense offset because our images are not configured with
+  //    the offset already, ie without distortion, they do not appear 3D because
+  //    of the missing offset
   vec2 theta = (in01 - transIn - lensOffset) * scaleIn;
   float rSq = theta.x * theta.x + theta.y * theta.y;
   vec2 ret = theta * (
@@ -27,7 +30,7 @@ vec2 HmdWarp(vec2 in01)
                       HmdWarpParam.z * rSq * rSq +
                       HmdWarpParam.w * rSq * rSq * rSq
                       );
-  return ret / scaleIn * scale + transIn + lensOffset;
+  return ret / scaleIn * scale + transIn;
 }
 void main(void)
 {
@@ -47,7 +50,7 @@ void main(void)
     // from the two eyes should align
     // When running with warping, the bands
     // should aling and appear straight
-    float bandWidth = 0.05;
+    float bandWidth = 0.1;
     bool debug = false;
     if ( debug &&
         (((abs(tc.x - screenCenter.x) > (screenSize.x / 2) * (1.0 - bandWidth)) &&

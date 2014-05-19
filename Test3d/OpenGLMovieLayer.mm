@@ -278,7 +278,7 @@ const int EYE_RIGHT = -1;
 - (void)getUniformsLocations
 {
   textureLoc = glGetUniformLocation(prog, "texture");
-  lensOffsetLoc = glGetUniformLocation(prog, "lensCenter");
+  lensOffsetLoc = glGetUniformLocation(prog, "lensOffset");
   screenSizeLoc = glGetUniformLocation(prog, "screenSize");
   screenCenterLoc = glGetUniformLocation(prog, "screenCenter");;
   scaleLoc = glGetUniformLocation(prog, "scale");
@@ -470,7 +470,7 @@ const int EYE_RIGHT = -1;
   float param_x;
   float param_y;
 
-  param_x = (lensOffset * 0.5f) * textureBounds.size.width;
+  param_x = lensOffset * textureBounds.size.width;
   param_y = 0.0f;
   DLog(@"lensOffsetCenter: (%f, %f)", param_x, param_y);
   glUniform2f(lensOffsetLoc, param_x, param_y);
@@ -499,7 +499,7 @@ const int EYE_RIGHT = -1;
 
   // Scale out the distorted sample
   param_x = scaleFactor;
-  param_y = param_x * textureAspectRatio;
+  param_y = param_x / textureAspectRatio;
   DLog(@"scale: (%f, %f)", param_x, param_y);
   glUniform2f(scaleLoc, param_x, param_y);
 
