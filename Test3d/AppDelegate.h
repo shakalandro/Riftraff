@@ -20,6 +20,9 @@
 
 @property OpenGLMovieLayer* layer;
 @property AVPlayer* player;
+@property (strong) IBOutlet NSSlider *slider;
+@property (weak) IBOutlet NSButton *toggleButton;
+
 
 - (void)setUpMenuItems;
 - (void)startMovie:(NSURL*) url;

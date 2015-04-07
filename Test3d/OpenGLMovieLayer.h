@@ -7,6 +7,7 @@
 
 #import "OVR.h"
 
+
 using namespace OVR;
 using namespace OVR::Util::Render;
 
@@ -56,6 +57,8 @@ using namespace OVR::Util::Render;
 
 @property (retain) AVPlayer *movie;
 @property (retain) AVPlayerItemVideoOutput *output;
+@property (weak) IBOutlet NSSlider *slider;
+@property bool flag;
 
 - (id)initWithMovie:(AVPlayer*)m;
 

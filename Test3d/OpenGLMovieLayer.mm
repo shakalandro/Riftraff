@@ -2,6 +2,7 @@
 #import <CoreVideo/CVPixelBuffer.h>
 #import <CoreVideo/CVOpenGLTextureCache.h>
 #import <OpenGL/gl3.h>
+#import "AppDelegate.h"
 
 #ifdef DEBUG
 #    define DLog(...) NSLog(__VA_ARGS__)
@@ -19,13 +20,13 @@ const int EYE_RIGHT = -1;
 
 - (id)initWithMovie:(AVPlayer*)m;
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   NSLog(@"Debug mode enabled");
-  #endif
+#endif
 
   self = [super init];
   if( !self )
-    return nil;
+  return nil;
 
   [self setAsynchronous:YES];
 
@@ -328,6 +329,7 @@ const int EYE_RIGHT = -1;
                forLayerTime:(CFTimeInterval)timeInterval
                 displayTime:(const CVTimeStamp *)timeStamp
 {
+  NSLog(@"debug canDraw");
   CGLSetCurrentContext(glContext);
 
   if (!initialized) {
@@ -346,7 +348,7 @@ const int EYE_RIGHT = -1;
   // There is no point in trying to draw anything if our
   // movie is not playing.
   if( [movie rate] <= 0.0 )
-    return NO;
+  return NO;
 
   // Check to see if a new frame (image) is ready to be draw at
   // the time specified.
@@ -401,6 +403,17 @@ const int EYE_RIGHT = -1;
             forLayerTime:(CFTimeInterval)interval
              displayTime:(const CVTimeStamp *)timeStamp
 {
+
+  CMTime time = [movie currentTime];
+  NSLog(@"debug Draw");
+
+  CMTime duration = [[[movie currentItem] asset] duration];
+  // [appDelegate.slider setFloatValue:time.value];
+  NSLog(@"test scale %f",(float)(time.value) / time.timescale / duration.value * duration.timescale);
+  float oldValue = [_slider floatValue];
+  float newValue = (float)(time.value) / time.timescale / duration.value * duration.timescale * 100;
+  if (abs(newValue - oldValue) < 5)
+  [_slider setFloatValue:newValue];
   CGLSetCurrentContext(glContext);
 
   // Self coordinates of the view
@@ -524,23 +537,23 @@ void reportError(NSString* message)
   if (error != GL_NO_ERROR) {
     switch (error) {
       case GL_INVALID_ENUM:
-        NSLog ( @"GL error occurred: %u GL_INVALID_ENUM, %@",  error , message);
-        break;
+      NSLog ( @"GL error occurred: %u GL_INVALID_ENUM, %@",  error , message);
+      break;
       case GL_INVALID_VALUE:
-        NSLog ( @"GL error occurred: %u GL_INVALID_VALUE, %@",  error , message );
-        break;
+      NSLog ( @"GL error occurred: %u GL_INVALID_VALUE, %@",  error , message );
+      break;
       case GL_INVALID_OPERATION:
-        NSLog ( @"GL error occurred: %u GL_INVALID_OPERATION, %@",  error , message );
-        break;
+      NSLog ( @"GL error occurred: %u GL_INVALID_OPERATION, %@",  error , message );
+      break;
       case GL_INVALID_FRAMEBUFFER_OPERATION:
-        NSLog ( @"GL error occurred: %u GL_INVALID_FRAMEBUFFER_OPERATION, %@",  error , message );
-        break;
+      NSLog ( @"GL error occurred: %u GL_INVALID_FRAMEBUFFER_OPERATION, %@",  error , message );
+      break;
       case GL_OUT_OF_MEMORY:
-        NSLog ( @"GL error occurred: %u GL_OUT_OF_MEMORY, %@",  error , message );
-        break;
+      NSLog ( @"GL error occurred: %u GL_OUT_OF_MEMORY, %@",  error , message );
+      break;
       default:
-        NSLog ( @"GL error occurred: %u UNKNOWN, %@",  error , message );
-        break;
+      NSLog ( @"GL error occurred: %u UNKNOWN, %@",  error , message );
+      break;
     }
   }
 }

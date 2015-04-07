@@ -30,14 +30,20 @@
 
 - (void)startMovie:(NSURL*) url
 {
-   _player = [AVPlayer playerWithURL:[url absoluteURL]];
+  _player = [AVPlayer playerWithURL:[url absoluteURL]];
 
   _layer = [[OpenGLMovieLayer alloc] initWithMovie:_player];
   [_layer setFrame:NSRectToCGRect([[[self window] contentView] bounds])];
   [[[self window] contentView] setWantsLayer:YES];
   [[[[self window] contentView] layer] addSublayer:_layer];
 
+
+  [_layer setSlider:_slider];
+  [_layer setFlag:YES];
+  [[[self window] contentView] addSubview:_slider];
+  [[[self window] contentView] addSubview:_toggleButton];
   [[_layer movie] seekToTime:kCMTimeZero];
+  [_slider setFloatValue:0];
   [[_layer movie] play];
 }
 
@@ -48,6 +54,16 @@
   NSMenu *myMenu = [[NSMenu alloc] initWithTitle:@"File"];
   [openMenu setSubmenu:myMenu];
   [[NSApp mainMenu] addItem:openMenu];
+}
+- (IBAction)togglePlayPause:(id)sender {
+  if ([[_layer movie] rate] <= 0) {
+    [[_layer movie] play];
+    [sender setTitle:@"Pause"];
+  } else {
+    [[_layer movie] pause];
+    [sender setTitle:@"Play"];
+  }
+
 }
 
 - (IBAction)openDocument:(id)pId {
@@ -75,6 +91,23 @@
 - (IBAction)windowDidResize:(id)pId {
   [_layer setFrame:NSRectToCGRect([[[self window] contentView] bounds])];
   [[[[self window] contentView] layer] addSublayer:_layer];
+}
+
+- (IBAction)sliderScroll:(id)sender {
+  [_layer setFlag:NO];
+  [[_layer movie] pause];
+  CMTime duration = [[[[_layer movie] currentItem] asset] duration];
+  NSLog(@"duration %lld", duration.value);
+  NSLog(@"scale %d", duration.timescale);
+  double length = [sender maxValue] - [sender minValue];
+  double currentPosition = [sender floatValue] - [sender minValue];
+  long long seekTime = (long long) duration.value * currentPosition / length;
+  NSLog(@"%lld", seekTime);
+
+  CMTime time = CMTimeMake(seekTime, duration.timescale);
+  [[_layer movie] seekToTime:time];
+  NSLog(@"debug");
+  [[_layer movie] play];
 }
 
 @end
