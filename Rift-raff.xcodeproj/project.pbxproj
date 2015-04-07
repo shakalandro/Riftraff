@@ -385,7 +385,7 @@
 				52643C39191C28380008350D /* Supporting Files */,
 			);
 			name = "Rift-raff";
-			path = Test3d;
+			path = Riftraff;
 			sourceTree = "<group>";
 		};
 		52643C39191C28380008350D /* Supporting Files */ = {
@@ -407,7 +407,7 @@
 				52643C57191C28380008350D /* Supporting Files */,
 			);
 			name = RiftRaffTests;
-			path = Test3dTests;
+			path = RiftraffTests;
 			sourceTree = "<group>";
 		};
 		52643C57191C28380008350D /* Supporting Files */ = {
@@ -603,7 +603,7 @@
 				8C91802C1922C48400CD2C77 /* fragmentShaderRift.glsl */,
 			);
 			name = Shaders;
-			path = Test3d;
+			path = Riftraff;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -968,8 +968,8 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Test3d/Rift-raff-Prefix.pch";
-				INFOPLIST_FILE = "Test3d/Rift-raff-Info.plist";
+				GCC_PREFIX_HEADER = "Riftraff/Rift-raff-Prefix.pch";
+				INFOPLIST_FILE = "Riftraff/Rift-raff-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -990,8 +990,8 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Test3d/Rift-raff-Prefix.pch";
-				INFOPLIST_FILE = "Test3d/Rift-raff-Info.plist";
+				GCC_PREFIX_HEADER = "Riftraff/Rift-raff-Prefix.pch";
+				INFOPLIST_FILE = "Riftraff/Rift-raff-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1008,19 +1008,19 @@
 		52643C64191C28380008350D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Test3d.app/Contents/MacOS/Test3d";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Test3d.app/Contents/MacOS/Riftraff";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Test3d/Test3d-Prefix.pch";
+				GCC_PREFIX_HEADER = "Riftraff/Rift-raff-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "Test3dTests/Rift-raffTests-Info.plist";
+				INFOPLIST_FILE = "RiftraffTests/Rift-raffTests-Info.plist";
 				PRODUCT_NAME = "Rift-raffTests";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -1030,15 +1030,15 @@
 		52643C65191C28380008350D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Test3d.app/Contents/MacOS/Test3d";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Test3d.app/Contents/MacOS/Riftraff";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Test3d/Test3d-Prefix.pch";
-				INFOPLIST_FILE = "Test3dTests/Rift-raffTests-Info.plist";
+				GCC_PREFIX_HEADER = "Riftraff/Rift-raff-Prefix.pch";
+				INFOPLIST_FILE = "RiftraffTests/Rift-raffTests-Info.plist";
 				PRODUCT_NAME = "Rift-raffTests";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
