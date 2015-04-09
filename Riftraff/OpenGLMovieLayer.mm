@@ -11,12 +11,18 @@
 #endif
 
 @implementation OpenGLMovieLayer
+{
+  int _frameCount;
+}
 
 @synthesize movie;
 @synthesize output;
 
 const int EYE_LEFT = 1;
 const int EYE_RIGHT = -1;
+
+// Flush texture cashe every X Frames
+const int FLUSH_TEXTURES_FRAME_COUNT = 15;
 
 - (id)initWithMovie:(AVPlayer*)m;
 {
@@ -40,6 +46,7 @@ const int EYE_RIGHT = -1;
   [self getHMDInfo];
 
   initialized = false;
+  _frameCount = 0;
 
   return self;
 }
@@ -329,7 +336,7 @@ const int EYE_RIGHT = -1;
                forLayerTime:(CFTimeInterval)timeInterval
                 displayTime:(const CVTimeStamp *)timeStamp
 {
-  NSLog(@"debug canDraw");
+  DLog(@"debug canDraw");
   CGLSetCurrentContext(glContext);
 
   if (!initialized) {
@@ -356,13 +363,18 @@ const int EYE_RIGHT = -1;
     CMTime time = [output itemTimeForCVTimeStamp:*timeStamp];
     if ([output hasNewPixelBufferForItemTime:time])
     {
-      // Release the previous frame
+      // Delete old texture
+      GLenum textureName = CVOpenGLTextureGetName(currentFrame);
+      glDeleteTextures(1, &textureName);
+      
+      // Release the previous frame and pixel buffer
       CVOpenGLTextureRelease(currentFrame);
-
+      CVOpenGLBufferRelease(currentPixelBuffer);
+      
       // Copy the current frame into our image buffer
-      CVPixelBufferRef frame = [output copyPixelBufferForItemTime:time itemTimeForDisplay:nil];
+      currentPixelBuffer = [output copyPixelBufferForItemTime:time itemTimeForDisplay:nil];
 
-      CVOpenGLTextureCacheCreateTextureFromImage(kCFAllocatorDefault, textureCache, frame, NULL, &currentFrame);
+      CVOpenGLTextureCacheCreateTextureFromImage(kCFAllocatorDefault, textureCache, currentPixelBuffer, NULL, &currentFrame);
 
       // Returns the texture coordinates for the
       // part of the image that should be displayed
@@ -388,8 +400,12 @@ const int EYE_RIGHT = -1;
                                       frameBoundsLeft.size.width,
                                       0);
 
-      // Setup the vertex arrays here because we need the texture size
-      [self setupVertexArrays];
+      
+      _frameCount++;
+      if (_frameCount % FLUSH_TEXTURES_FRAME_COUNT == 0) {
+        DLog(@"Flushing texture cache");
+        CVOpenGLTextureCacheFlush(textureCache, 0);
+      }
 
       return YES;
     }
@@ -405,11 +421,14 @@ const int EYE_RIGHT = -1;
 {
 
   CMTime time = [movie currentTime];
-  NSLog(@"debug Draw");
+  DLog(@"debug Draw");
+  
+  // Setup the vertex arrays here because we need the texture size
+  [self setupVertexArrays];
 
   CMTime duration = [[[movie currentItem] asset] duration];
   // [appDelegate.slider setFloatValue:time.value];
-  NSLog(@"test scale %f",(float)(time.value) / time.timescale / duration.value * duration.timescale);
+  DLog(@"test scale %f",(float)(time.value) / time.timescale / duration.value * duration.timescale);
   float oldValue = [_slider floatValue];
   float newValue = (float)(time.value) / time.timescale / duration.value * duration.timescale * 100;
   if (abs(newValue - oldValue) < 5)

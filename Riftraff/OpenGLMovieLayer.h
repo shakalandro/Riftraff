@@ -16,7 +16,8 @@ using namespace OVR::Util::Render;
   AVPlayer                *movie;
   AVPlayerItemVideoOutput *output;
   CVOpenGLTextureCacheRef textureCache;
-  CVOpenGLTextureRef		currentFrame;
+  CVOpenGLTextureRef      currentFrame;
+  CVPixelBufferRef        currentPixelBuffer;
 
   // Shaders program
   GLuint                  vertexShader;
